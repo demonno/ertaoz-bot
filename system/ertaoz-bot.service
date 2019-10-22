@@ -1,0 +1,14 @@
+[Unit]
+Description=ertaoz.py
+After=network.target
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/srv/telegram_bots/ertaoz
+ExecStart=/srv/bot_env/bin/python ertaoz.py
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+[Install]
+WantedBy=multi-user.target
