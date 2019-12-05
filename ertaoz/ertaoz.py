@@ -50,7 +50,7 @@ def introduce(update, context):
         )
     )
 
-    text = "გამარჯობა {}! მე ვარ ერთაოზ ბრეგვაძე ძუკნურიდან. მე მივესალმები ხოლმე ყველას ვინც შემოგვიერთდება :)".format(
+    text = "გამარჯობა {}! მე ვარ ერთაოზ ბრეგვაძე ძუკნურიდან. მე გავუიასნებ ხოლმე ამ ჩატის მიზანს ყველას ვინც შემოგვიერთდება :)".format(
         update.message.chat.title
     )
     send_async(update, context, text=text)
@@ -67,13 +67,19 @@ def welcome(update, context, new_chat_member):
         )
     )
 
-    text = "გამარჯობა $username! კეთილი იყოს შენი მობრძანება $title-ში :)"
+    text = """გამარჯობა {username}! კეთილი იყოს შენი მობრძანება {title}-ში :)
+
+    როგოც უკვე იცი ბევრი უსახელო ტალინელი მიდის საქართველოში საახალწლო დღეების გასატარებლად.
+    ბევრმა გამოთქვა იდეები (შევიკრიბოთ, ვქნათ რამე, და ა.შ.)
+
+    ადევნე თვალი და თუ სურვილი/დრო გექნება შეუერთდი უსახელო ტალინელების იდეებს.
+
+    გისურვებ ბედნიერ ახალი წლის დღეებს :) <3
+    """
 
     # Replace placeholders and send message
-    text = text.replace("$username", new_chat_member["first_name"]).replace(
-        "$title", message.chat.title
-    )
-    send_async(update, context, text=text, parse_mode=ParseMode.HTML)
+    text = text.format(username=new_chat_member["first_name"], title=message.chat.title)
+    send_async(update, context, text=text)
 
 
 def goodbye(update, context):
