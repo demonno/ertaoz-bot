@@ -19,20 +19,20 @@ BOTNAME = "ertaoz_bot"
 
 help_text = """ერთაოზი ძუყნურიდან!          
 \nბრძანებები:\n
-/`cat` - კარის ფოტოს გამოგზავნა\n 
-/`order` - ჩატში წესრიგის დამყარევა\n 
-/`when_who` - ვიზეარის ფრენების სია\n
+/`cat` - კარის ფოტოს გამოგზავნა
+/`order` - ჩატში წესრიგის დამყარევა
+/`when_who` - ვიზეარის ფრენების სია
 
-/ბრძანება@ertaoz_bot პარამეტრი1 პარამეტრი2
+/`ბრძანება@ertaoz_bot p1 p2`
 
 
 მაგალითად:
 
-/cat@ertaoz_bot
-/cat@ertaoz_bot cute
-/cat@ertaoz_bot funny 
-/cat@ertaoz_bot says Love
-/cat@ertaoz_bot cute says Love 
+/cat@ertaoz\_bot
+/cat@ertaoz\_bot cute
+/cat@ertaoz\_bot funny 
+/cat@ertaoz\_bot says Love
+/cat@ertaoz\_bot cute says Love 
 
 """
 
