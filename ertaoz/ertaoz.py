@@ -53,6 +53,20 @@ George -------22-19
     update.message.reply_text(txt)
 
 
+def when_who(update, context):
+    txt = """    
+15-09 
+22-19 George 
+22-12 
+22-12 
+22-05 
+22-05 
+22-05 
+22-05 
+18-05 
+"""
+    update.message.reply_text(txt)
+
 
 # Introduce the bot to a chat its been added to
 def introduce(update, context):
@@ -167,6 +181,7 @@ def main():
     dp.add_handler(CommandHandler("help", start))
     dp.add_handler(CommandHandler("order", order))
     dp.add_handler(CommandHandler("who_when", who_when))
+    dp.add_handler(CommandHandler("when_who", when_who))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
