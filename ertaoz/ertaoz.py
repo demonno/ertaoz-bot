@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This program is dedicated to the public domain under the CC0 license.
-#
-# THIS EXAMPLE HAS BEEN UPDATED TO WORK WITH THE BETA VERSION 12 OF PYTHON-TELEGRAM-BOT.
-# If you're still using version 11.1.0, please see the examples at
-# https://github.com/python-telegram-bot/python-telegram-bot/tree/v11.1.0/examples
-
 import logging
 
 from telegram import ParseMode
@@ -23,6 +17,26 @@ TOKEN = "726693597:AAGuNw5J2QiDc-C7DKr2Sa4gaQFJy51E4Bc"
 BOTNAME = "ertaoz_bot"
 
 
+help_text = """ერთაოზი ძუყნურიდან!          
+\nბრძანებები:\n
+/`cat` - კარის ფოტოს გამოგზავნა\n 
+/`order` - ჩატში წესრიგის დამყარევა\n 
+/`when_who` - ვიზეარის ფრენების სია\n
+
+/ბრძანება@ertaoz_bot პარამეტრი1 პარამეტრი2
+
+
+მაგალითად:
+
+/cat@ertaoz_bot
+/cat@ertaoz_bot cute
+/cat@ertaoz_bot funny 
+/cat@ertaoz_bot says Love
+/cat@ertaoz_bot cute says Love 
+
+"""
+
+
 @run_async
 def send_async(update, context, *args, **kwargs):
     context.bot.sendMessage(chat_id=update.effective_chat.id, **kwargs)
@@ -34,27 +48,38 @@ def start(update, context):
     update.message.reply_text("ერთაოზ ბრეგვაძე ძუყნურიდან!")
 
 
+def cat(update, context):
+    cat_photo_url = "https://cataas.com/cat/"
+    if context.args:
+        cat_photo_params = "/".join(context.args)
+        cat_photo_url = cat_photo_url + cat_photo_params
+    if cat_photo_url.endswith("/"):
+        cat_photo_url = cat_photo_url[:-1]
+    context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=cat_photo_url)
+
+
 def order(update, context):
     update.message.reply_text("აბა! პარიადკაში მოდით ეხლა თორე დავუძახე ქრისტეფორეს!")
 
 
 def when_who(update, context):
     txt = """    
-11-05 = 
-15-09 = 
-15-05 = 
-18-05 = 
-18-05 = 
-22-05 = 
-22-05 = 
-22-05 = 
-22-05 = 
-22-12 = 
-22-12 = 
-22-12 = 
-22-19 = 
+`11-05` = 
+`15-09` = 
+`15-05` = 
+`18-05` = 
+`18-05` = 
+`22-05` = 
+`22-05` = 
+`22-05` = 
+`22-05` = 
+`22-12` = 
+`22-12` = 
+`22-12` = 
+`22-19` = 
 """
-    update.message.reply_text(txt)
+    # update.message.reply_text(txt)
+    send_async(update, context, text=txt, parse_mode=ParseMode.MARKDOWN)
 
 
 # Introduce the bot to a chat its been added to
@@ -152,6 +177,10 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
+def help(update, context):
+    send_async(update, context, text=help_text , parse_mode=ParseMode.MARKDOWN)
+
+
 def main():
     """Run bot."""
     # Create the Updater and pass it your bot's token.
@@ -164,7 +193,8 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", start))
+    dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("cat", cat))
     dp.add_handler(CommandHandler("order", order))
     dp.add_handler(CommandHandler("when_who", when_who))
 
