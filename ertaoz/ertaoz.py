@@ -39,18 +39,16 @@ def order(update, context):
 
 
 def who_when(update, context):
-    schedule = """
-    
-    
-    
+    schedule = """    
         15-09
-    George       22-19
-    @gkochakidze        22-12
-    Demo                22-12
-    pepela              22-05
-    Jani       22-05
+George           22-19
+       22-12
+             22-12
+    22-05
+        22-05
+Jani           22-05
               22-05
-    @dmuml10            18-04
+          18-04
     """
     update.message.reply_text(schedule)
 
