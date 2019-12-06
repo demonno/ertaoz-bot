@@ -39,18 +39,19 @@ def order(update, context):
 
 
 def who_when(update, context):
-    schedule = """    
+    txt = """    
         15-09
 George           22-19
        22-12
              22-12
     22-05
         22-05
-Jani           22-05
+          22-05
               22-05
-          18-04
+          18-05
     """
-    update.message.reply_text(schedule)
+    update.message.reply_text(txt)
+
 
 
 # Introduce the bot to a chat its been added to
