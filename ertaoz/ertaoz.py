@@ -38,6 +38,23 @@ def order(update, context):
     update.message.reply_text("აბა! პარიადკაში მოდით ეხლა თორე დავუძახე ქრისტეფორეს!")
 
 
+def who_when(update, context):
+    schedule = """
+    
+    
+    
+        15-09
+    George       22-19
+    @gkochakidze        22-12
+    Demo                22-12
+    pepela              22-05
+    Jani       22-05
+              22-05
+    @dmuml10            18-04
+    """
+    update.message.reply_text(schedule)
+
+
 # Introduce the bot to a chat its been added to
 def introduce(update, context):
     """
@@ -150,6 +167,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", start))
     dp.add_handler(CommandHandler("order", order))
+    dp.add_handler(CommandHandler("who_when", who_when))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
