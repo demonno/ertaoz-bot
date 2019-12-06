@@ -38,36 +38,20 @@ def order(update, context):
     update.message.reply_text("აბა! პარიადკაში მოდით ეხლა თორე დავუძახე ქრისტეფორეს!")
 
 
-def who_when(update, context):
-    txt = """    
------15-09
-------15-05
-George -------22-19
-----22-12
-----------22-12
--22-05
------22-05
-------22-05
------------22-05
--------18-05
------18-05
-    """
-    update.message.reply_text(txt)
-
-
 def when_who(update, context):
     txt = """    
+11-05 = 
 15-09 = 
 15-05 = 
-22-19 = George 
+18-05 = 
+18-05 = 
+22-19 = 
 22-12 = 
 22-12 = 
 22-05 = 
 22-05 = 
 22-05 = 
 22-05 = 
-18-05 = 
-18-05 = 
 """
     update.message.reply_text(txt)
 
@@ -107,10 +91,7 @@ def welcome(update, context, new_chat_member):
 
     text = """გამარჯობა {username}! კეთილი იყოს შენი მობრძანება {title}-ში :)
 
-    როგოც უკვე იცი ბევრი უსახელო ტალინელი მიდის საქართველოში საახალწლო დღეების გასატარებლად.
-    ბევრმა გამოთქვა იდეები (შევიკრიბოთ, ვქნათ რამე, და ა.შ.)
-
-    ადევნე თვალი და თუ სურვილი/დრო გექნება შეუერთდი უსახელო ტალინელების იდეებს.
+    {username} დაწერე რა დღეებში ხარ საქართველოში.
 
     გისურვებ ბედნიერ ახალი წლის დღეებს :) <3
     """
@@ -184,7 +165,6 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", start))
     dp.add_handler(CommandHandler("order", order))
-    dp.add_handler(CommandHandler("who_when", who_when))
     dp.add_handler(CommandHandler("when_who", when_who))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
