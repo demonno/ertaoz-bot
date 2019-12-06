@@ -34,6 +34,10 @@ def start(update, context):
     update.message.reply_text("ერთაოზ ბრეგვაძე ძუკნურიდან!")
 
 
+def order(update, context):
+    update.message.reply_text("აბა! პარიადკაში მოდით ეხლა თორე დავუძახე ქრისტეფორეს!")
+
+
 # Introduce the bot to a chat its been added to
 def introduce(update, context):
     """
@@ -145,6 +149,7 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", start))
+    dp.add_handler(CommandHandler("order", order))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
