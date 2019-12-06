@@ -31,7 +31,7 @@ def send_async(update, context, *args, **kwargs):
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(update, context):
-    update.message.reply_text("ერთაოზ ბრეგვაძე ძუკნურიდან!")
+    update.message.reply_text("ერთაოზ ბრეგვაძე ძუყნურიდან!")
 
 
 def order(update, context):
@@ -41,6 +41,7 @@ def order(update, context):
 def who_when(update, context):
     txt = """    
 -----15-09
+------15-05
 George -------22-19
 ----22-12
 ----------22-12
@@ -49,21 +50,24 @@ George -------22-19
 ------22-05
 -----------22-05
 -------18-05
+-----18-05
     """
     update.message.reply_text(txt)
 
 
 def when_who(update, context):
     txt = """    
-15-09 
-22-19 George 
-22-12 
-22-12 
-22-05 
-22-05 
-22-05 
-22-05 
-18-05 
+15-09 = 
+15-05 = 
+22-19 = George 
+22-12 = 
+22-12 = 
+22-05 = 
+22-05 = 
+22-05 = 
+22-05 = 
+18-05 = 
+18-05 = 
 """
     update.message.reply_text(txt)
 
