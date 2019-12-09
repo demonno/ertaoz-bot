@@ -19,8 +19,8 @@ BOTNAME = "ertaoz_bot"
 
 help_text = """ერთაოზი ძუყნურიდან!          
 \nბრძანებები:\n
-/`cat` - კარის ფოტოს გამოგზავნა
-/`order` - ჩატში წესრიგის დამყარევა
+/`cat` - კატის ფოტოს გამოგზავნა
+/`order` - ჩატში წესრიგის დამყარება
 /`when_who` - ვიზეარის ფრენების სია
 
 /`ბრძანება@ertaoz_bot p1 p2`
@@ -80,7 +80,7 @@ def when_who(update, context):
 """
     # update.message.reply_text(txt)
     if update.effective_chat.id != -360632460:
-        send_async(update, context, text="Thi is private info!")
+        send_async(update, context, text="აქ ვერ გეტყვი.")
     else:
         send_async(update, context, text=txt, parse_mode=ParseMode.MARKDOWN)
 
