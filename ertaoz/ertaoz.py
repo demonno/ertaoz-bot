@@ -67,8 +67,8 @@ def when_who(update, context):
 `11-05` = 
 `15-09` = 
 `15-05` = 
-`18-05` = 
-`18-05` = 
+`18-04` = 
+`18-04` = 
 `22-05` = 
 `22-05` = 
 `22-05` = 
@@ -79,7 +79,10 @@ def when_who(update, context):
 `22-19` = 
 """
     # update.message.reply_text(txt)
-    send_async(update, context, text=txt, parse_mode=ParseMode.MARKDOWN)
+    if update.effective_chat.id != -360632460:
+        send_async(update, context, text="Thi is private info!")
+    else:
+        send_async(update, context, text=txt, parse_mode=ParseMode.MARKDOWN)
 
 
 # Introduce the bot to a chat its been added to
