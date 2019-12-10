@@ -38,11 +38,14 @@ help_text = """ერთაოზი ძუყნურიდან!
 """
 
 wisdoms = [
-    ("სიყვარული ვერტიკალურია და თან ბრუნვადი", "https://s4.gifyu.com/images/love.gif"),
-    ("არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, არადა, უნდა გავფრინდეთ!", "https://thumbs.gfycat.com/AdventurousColossalBobwhite-size_restricted.gif"),
-    ("რომელია ჩვენს შორის მართალი, იქ გამოჩნდება, ზეცაში!", "https://thumbs.gfycat.com/RelievedSardonicGoa-size_restricted.gif"),
+    ("სიყვარული ვერტიკალურია და თან ბრუნვადი",
+     "https://s4.gifyu.com/images/love.gif"),
+    ("არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, არადა, უნდა გავფრინდეთ!",
+     "https://thumbs.gfycat.com/AdventurousColossalBobwhite-size_restricted.gif"),
+    ("რომელია ჩვენს შორის მართალი, იქ გამოჩნდება, ზეცაში!",
+     "https://thumbs.gfycat.com/RelievedSardonicGoa-size_restricted.gif"),
     ("სიყვარული... სიყვარულია მშობელი ოცნებისა, ოცნება აღვიძებს კაცთა მოდგმის მთვლემარე გონებას, გონება აღძრავს ქმედებას, პლიუს-მინუს, ემ ცე კვადრატ (mc²), ეф, ფუძე (√) ვნებათაღელვის უსასრულობისა და შეცნობილი აუცილებლობისაკენ! მიდით ერთაოზ!",
-           "https://i.makeagif.com/media/7-09-2015/gLIbf3.gif")
+     "https://i.makeagif.com/media/7-09-2015/gLIbf3.gif")
 ]
 
 
@@ -76,9 +79,8 @@ def cat(update, context):
 
 
 def order(update, context):
-    send_async_gif(update, context,
+    send_async_gif(update, context, caption="დახურეთ საინფორმაციო წყარო!",
                    animation="https://s4.gifyu.com/images/shush.gif",)
-    send_async(update, context, text="დახურეთ საინფორმაციო წყარო!")
 
 
 def when_who(update, context):
