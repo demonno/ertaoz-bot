@@ -5,6 +5,7 @@ import logging
 from telegram import ParseMode
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
+import random
 
 # Enable logging
 logging.basicConfig(
@@ -36,6 +37,14 @@ help_text = """ერთაოზი ძუყნურიდან!
 
 """
 
+wisdoms = [
+    ("სიყვარული ვერტიკალურია და თან ბრუნვადი", "https://s4.gifyu.com/images/love.gif"),
+    ("არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, არადა, უნდა გავფრინდეთ!", "https://thumbs.gfycat.com/AdventurousColossalBobwhite-size_restricted.gif"),
+    ("რომელია ჩვენს შორის მართალი, იქ გამოჩნდება, ზეცაში!", "https://thumbs.gfycat.com/RelievedSardonicGoa-size_restricted.gif"),
+    ("სიყვარული... სიყვარულია მშობელი ოცნებისა, ოცნება აღვიძებს კაცთა მოდგმის მთვლემარე გონებას, გონება აღძრავს ქმედებას, პლიუს-მინუს, ემ ცე კვადრატ (mc²), ეф, ფუძე (√) ვნებათაღელვის უსასრულობისა და შეცნობილი აუცილებლობისაკენ! მიდით ერთაოზ!",
+           "https://i.makeagif.com/media/7-09-2015/gLIbf3.gif")
+]
+
 
 @run_async
 def send_async(update, context, *args, **kwargs):
@@ -44,7 +53,8 @@ def send_async(update, context, *args, **kwargs):
 
 @run_async
 def send_async_gif(update, context, *args, **kwargs):
-    context.bot.sendAnimation(chat_id=update.effective_chat.id, *args, **kwargs)
+    context.bot.sendAnimation(
+        chat_id=update.effective_chat.id, *args, **kwargs)
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -95,7 +105,14 @@ def when_who(update, context):
                    parse_mode=ParseMode.MARKDOWN)
 
 
+def wisdom(update, context):
+    randomWisdom = random.choice(wisdoms)
+    send_async_gif(update, context, caption=randomWisdom[0],
+                   animation=randomWisdom[1])
+
 # Introduce the bot to a chat its been added to
+
+
 def introduce(update, context):
     """
     Introduces the bot to a chat its been added to and saves the user id of the
@@ -212,6 +229,7 @@ def main():
     dp.add_handler(CommandHandler("cat", cat))
     dp.add_handler(CommandHandler("order", order))
     dp.add_handler(CommandHandler("when_who", when_who))
+    dp.add_handler(CommandHandler("wisdom", wisdom))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
