@@ -17,7 +17,7 @@ TOKEN = "726693597:AAGuNw5J2QiDc-C7DKr2Sa4gaQFJy51E4Bc"
 BOTNAME = "ertaoz_bot"
 
 
-help_text = """ერთაოზი ძუყნურიდან!          
+help_text = """ერთაოზი ძუყნურიდან!
 \nბრძანებები:\n
 /`cat` - კატის ფოტოს გამოგზავნა
 /`order` - ჩატში წესრიგის დამყარება
@@ -30,9 +30,9 @@ help_text = """ერთაოზი ძუყნურიდან!
 
 /cat@ertaoz\_bot
 /cat@ertaoz\_bot cute
-/cat@ertaoz\_bot funny 
+/cat@ertaoz\_bot funny
 /cat@ertaoz\_bot says Love
-/cat@ertaoz\_bot cute says Love 
+/cat@ertaoz\_bot cute says Love
 
 """
 
@@ -42,8 +42,15 @@ def send_async(update, context, *args, **kwargs):
     context.bot.sendMessage(chat_id=update.effective_chat.id, **kwargs)
 
 
+@run_async
+def send_async_gif(update, context, *args, **kwargs):
+    context.bot.send_animation(chat_id=update.effective_chat.id, duration=None, width=None, height=None,
+                               thumb=None, caption=None, parse_mode=None, disable_notification=False, reply_to_message_id=None, reply_markup=None, timeout=20, **kwargs)
+
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
+
+
 def start(update, context):
     update.message.reply_text("ერთაოზ ბრეგვაძე ძუყნურიდან!")
 
@@ -55,15 +62,18 @@ def cat(update, context):
         cat_photo_url = cat_photo_url + cat_photo_params
     if cat_photo_url.endswith("/"):
         cat_photo_url = cat_photo_url[:-1]
-    context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=cat_photo_url)
+    context.bot.sendPhoto(
+        chat_id=update.effective_chat.id, photo=cat_photo_url)
 
 
 def order(update, context):
-    update.message.reply_text("აბა! პარიადკაში მოდით ეხლა თორე დავუძახე ქრისტეფორეს!")
+    send_async_gif(update, context,
+                   animation="https://s4.gifyu.com/images/shush.gif",)
+    update.message.reply_text("დახურეთ საინფორმაციო წყარო")
 
 
 def when_who(update, context):
-    txt = """    
+    txt = """
 `11-05` = 
 `15-09` = 
 `15-05` = 
@@ -82,7 +92,8 @@ def when_who(update, context):
     if update.effective_chat.id != -360632460:
         send_async(update, context, text="აქ ვერ გეტყვი.")
     else:
-        send_async(update, context, text=txt, parse_mode=ParseMode.MARKDOWN)
+        send_async(update, context, text=txt,
+                   parse_mode=ParseMode.MARKDOWN)
 
 
 # Introduce the bot to a chat its been added to
@@ -126,7 +137,8 @@ def welcome(update, context, new_chat_member):
     """
 
     # Replace placeholders and send message
-    text = text.format(username=new_chat_member["first_name"], title=message.chat.title)
+    text = text.format(
+        username=new_chat_member["first_name"], title=message.chat.title)
     send_async(update, context, text=text)
 
 
@@ -181,7 +193,8 @@ def error(update, context):
 
 
 def help(update, context):
-    send_async(update, context, text=help_text , parse_mode=ParseMode.MARKDOWN)
+    send_async(update, context, text=help_text,
+               parse_mode=ParseMode.MARKDOWN)
 
 
 def main():
