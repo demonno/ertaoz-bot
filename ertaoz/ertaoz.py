@@ -68,7 +68,7 @@ def cat(update, context):
 def order(update, context):
     send_async_gif(update, context,
                    animation="https://s4.gifyu.com/images/shush.gif",)
-    update.message.reply_text("დახურეთ საინფორმაციო წყარო")
+    send_async(update, context, text="დახურეთ საინფორმაციო წყარო!")
 
 
 def when_who(update, context):
