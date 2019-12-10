@@ -44,8 +44,7 @@ def send_async(update, context, *args, **kwargs):
 
 @run_async
 def send_async_gif(update, context, *args, **kwargs):
-    context.bot.send_animation(chat_id=update.effective_chat.id, duration=None, width=None, height=None,
-                               thumb=None, caption=None, parse_mode=None, disable_notification=False, reply_to_message_id=None, reply_markup=None, timeout=20, **kwargs)
+    context.bot.sendAnimation(chat_id=update.effective_chat.id, *args, **kwargs)
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
