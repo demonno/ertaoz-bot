@@ -131,7 +131,9 @@ def when_who(update, context):
 
         lines.append("{}-{} = <code>{}</code>".format(start, end, name))
 
-    txt = "\n".join(lines)
+    today_txt = "<b>დღეს:</b> {}-{}-{}\n\n".format(datetime.now().day,
+                                                   datetime.now().month, datetime.now().year)
+    txt = today_txt + "\n".join(lines)
 
     if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
         send_async(update, context, text="აქ ვერ გეტყვი.")
