@@ -133,10 +133,10 @@ def when_who(update, context):
 
     txt = "\n".join(lines)
 
-    # if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
-    #    send_async(update, context, text="აქ ვერ გეტყვი.")
-    # else:
-    send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
+    if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
+        send_async(update, context, text="აქ ვერ გეტყვი.")
+    else:
+        send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
 
 
 def wisdom(update, context):
