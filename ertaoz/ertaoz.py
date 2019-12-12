@@ -122,14 +122,14 @@ def when_who(update, context):
         if outbound <= now:
             start = "<i>{}</i>".format(outbound.day)
         else:
-            start = "{}".format(outbound.day)
+            start = "<b>{}</b>".format(outbound.day)
 
         if inbound <= now:
             end = "<i>{}</i>".format(inbound.day)
         else:
-            end = "{}".format(inbound.day)
+            end = "<b>{}</b>".format(inbound.day)
 
-        lines.append("{}-{} = {}".format(start, end, name))
+        lines.append("{}-{} = <code>{}</code>".format(start, end, name))
 
     txt = "\n".join(lines)
 
