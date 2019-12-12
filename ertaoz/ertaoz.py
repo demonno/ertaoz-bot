@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
+from datetime import datetime
 
 from telegram import ParseMode
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
@@ -36,6 +37,8 @@ help_text = """ერთაოზი ძუყნურიდან!
 /cat@ertaoz\_bot cute says Love
 
 """
+TEST_GROUP_ID = -353748767
+NONAME_GROUP_ID = -360632460
 
 wisdoms = [
     ("სიყვარული ვერტიკალურია და თან ბრუნვადი",
@@ -46,6 +49,22 @@ wisdoms = [
      "https://thumbs.gfycat.com/RelievedSardonicGoa-size_restricted.gif"),
     ("სიყვარული... სიყვარულია მშობელი ოცნებისა, ოცნება აღვიძებს კაცთა მოდგმის მთვლემარე გონებას, გონება აღძრავს ქმედებას, პლიუს-მინუს, ემ ცე კვადრატ (mc²), ეф, ფუძე (√) ვნებათაღელვის უსასრულობისა და შეცნობილი აუცილებლობისაკენ! მიდით ერთაოზ!",
      "https://i.makeagif.com/media/7-09-2015/gLIbf3.gif")
+]
+
+WHEN_WHO = [
+    (datetime(day=11, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=15, month=12, year=2019), datetime(day=9, month=1, year=2020), ""),
+    (datetime(day=15, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
+    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=19, month=1, year=2020), ""),
 ]
 
 
@@ -84,23 +103,24 @@ def order(update, context):
 
 
 def when_who(update, context):
-    txt = """
-`11-05` = 
-`15-09` = 
-`15-05` = 
-`18-04` = 
-`18-04` = 
-`22-05` = 
-`22-05` = 
-`22-05` = 
-`22-05` = 
-`22-12` = 
-`22-12` = 
-`22-12` = 
-`22-19` = 
-"""
-    # update.message.reply_text(txt)
-    if update.effective_chat.id != -360632460:
+    now = datetime.now()
+    lines = []
+    for outbound, inbound, name in WHEN_WHO:
+        if outbound <= now:
+            start = "`{}`".format(outbound.day)
+        else:
+            start = "{}".format(outbound.day)
+
+        if inbound <= now:
+            end = "~~{}~~".format(inbound.day)
+        else:
+            end = "{}".format(inbound.day)
+
+        lines.append("{}-{} = {}".format(start, end, name))
+
+    txt = "\n".join(lines)
+
+    if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
         send_async(update, context, text="აქ ვერ გეტყვი.")
     else:
         send_async(update, context, text=txt,
