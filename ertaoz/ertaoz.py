@@ -52,19 +52,32 @@ wisdoms = [
 ]
 
 WHEN_WHO = [
-    (datetime(day=11, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=15, month=12, year=2019), datetime(day=9, month=1, year=2020), ""),
-    (datetime(day=15, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
-    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=19, month=1, year=2020), ""),
+    (datetime(day=11, month=12, year=2019), datetime(
+        day=5, month=1, year=2020), ""),
+    (datetime(day=15, month=12, year=2019), datetime(
+        day=9, month=1, year=2020), ""),
+    (datetime(day=15, month=12, year=2019), datetime(
+        day=5, month=1, year=2020), ""),
+    (datetime(day=18, month=12, year=2019), datetime(
+        day=4, month=1, year=2020), ""),
+    (datetime(day=18, month=12, year=2019), datetime(
+        day=4, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(
+        day=19, month=1, year=2020), ""),
 ]
 
 
@@ -107,12 +120,12 @@ def when_who(update, context):
     lines = []
     for outbound, inbound, name in WHEN_WHO:
         if outbound <= now:
-            start = "`{}`".format(outbound.day)
+            start = "<i>{}</i>".format(outbound.day)
         else:
             start = "{}".format(outbound.day)
 
         if inbound <= now:
-            end = "~~{}~~".format(inbound.day)
+            end = "<i>{}</i>".format(inbound.day)
         else:
             end = "{}".format(inbound.day)
 
@@ -120,11 +133,10 @@ def when_who(update, context):
 
     txt = "\n".join(lines)
 
-    if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
-        send_async(update, context, text="აქ ვერ გეტყვი.")
-    else:
-        send_async(update, context, text=txt,
-                   parse_mode=ParseMode.MARKDOWN)
+    # if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
+    #    send_async(update, context, text="აქ ვერ გეტყვი.")
+    # else:
+    send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
 
 
 def wisdom(update, context):
