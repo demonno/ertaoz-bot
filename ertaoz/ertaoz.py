@@ -120,14 +120,14 @@ def when_who(update, context):
     lines = []
     for outbound, inbound, name in WHEN_WHO:
         if outbound <= now:
-            start = "<i>{}</i>".format(outbound.day.zfill(2))
+            start = "<i>{}</i>".format(str(outbound.day).zfill(2))
         else:
-            start = "<b>{}</b>".format(outbound.day.zfill(2))
+            start = "<b>{}</b>".format(str(outbound.day).zfill(2))
 
         if inbound <= now:
-            end = "<i>{}</i>".format(inbound.day.zfill(2))
+            end = "<i>{}</i>".format(str(outbound.day).zfill(2))
         else:
-            end = "<b>{}</b>".format(inbound.day.zfill(2))
+            end = "<b>{}</b>".format(str(outbound.day).zfill(2))
 
         lines.append("{}-{} = <code>{}</code>".format(start, end, name))
 
