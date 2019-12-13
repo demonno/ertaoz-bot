@@ -1,1 +1,4 @@
 python-telegram-bot==12.2.0
+
+# Dev Dependencies
+black==19.10b0
