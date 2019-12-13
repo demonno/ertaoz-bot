@@ -249,12 +249,46 @@ def help(update, context):
                parse_mode=ParseMode.MARKDOWN)
 
 
+def notify_about_travelers_job(context):
+    today = datetime.now()
+
+    if today.hour != 9:
+        return
+
+    travelers_today = []
+    travelers_tomorrow = []
+
+    for outbound, inbound, name in WHEN_WHO:
+        difference = (outbound - today).days
+        if difference >= 0 and difference <= 3:
+            if outbound.day - today.day == 0:
+                travelers_today.append(name)
+            elif outbound.day - today.day == 1:
+                travelers_tomorrow.append(name)
+
+    message = ""
+    if len(travelers_today) == 1:
+        message = "დღეს მიემგზავრება: " + str(travelers_today[0])
+    elif len(travelers_today) > 1:
+        message = "დღეს მიემგზავრებიან: " + ", ".join(travelers_today)
+    elif len(travelers_today) == 0:
+        if len(travelers_tomorrow) == 1:
+            message = "ხვალ მიემგზავრება: " + str(travelers_tomorrow[0])
+        elif len(travelers_tomorrow) > 1:
+            message = "ხვალ მიემგზავრებიან: " + ", ".join(travelers_tomorrow)
+
+    if message != "":
+        context.bot.send_message(chat_id=TEST_GROUP_ID, text=message)
+        context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message)
+
+
 def main():
     """Run bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
     updater = Updater(TOKEN, use_context=True)
+    job = updater.job_queue
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -274,6 +308,9 @@ def main():
 
     # Start the Bot
     updater.start_polling()
+
+    # schedule a job every hour min(60 * 60)
+    job.run_repeating(notify_about_travelers_job, interval=3600, first=0)
 
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or
     # SIGABRT. This should be used most of the time, since start_polling() is
