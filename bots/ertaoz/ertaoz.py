@@ -8,10 +8,11 @@ from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
 import random
 
+
 # Enable logging
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
+from bots.ertaoz.models import Wisdom
+
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
@@ -40,15 +41,20 @@ help_text = """ერთაოზი ძუყნურიდან!
 TEST_GROUP_ID = -353748767
 NONAME_GROUP_ID = -360632460
 
-wisdoms = [
-    ("სიყვარული ვერტიკალურია და თან ბრუნვადი",
-     "https://s4.gifyu.com/images/love.gif"),
-    ("არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, არადა, უნდა გავფრინდეთ!",
-     "https://thumbs.gfycat.com/AdventurousColossalBobwhite-size_restricted.gif"),
-    ("რომელია ჩვენს შორის მართალი, იქ გამოჩნდება, ზეცაში!",
-     "https://thumbs.gfycat.com/RelievedSardonicGoa-size_restricted.gif"),
-    ("სიყვარული... სიყვარულია მშობელი ოცნებისა, ოცნება აღვიძებს კაცთა მოდგმის მთვლემარე გონებას, გონება აღძრავს ქმედებას, პლიუს-მინუს, ემ ცე კვადრატ (mc²), ეф, ფუძე (√) ვნებათაღელვის უსასრულობისა და შეცნობილი აუცილებლობისაკენ! მიდით ერთაოზ!",
-     "https://i.makeagif.com/media/7-09-2015/gLIbf3.gif")
+WISDOMS = [
+    Wisdom("სიყვარული ვერტიკალურია და თან ბრუნვადი", "https://s4.gifyu.com/images/love.gif"),
+    Wisdom(
+        "არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, არადა, უნდა გავფრინდეთ!",
+        "https://thumbs.gfycat.com/AdventurousColossalBobwhite-size_restricted.gif",
+    ),
+    Wisdom(
+        "რომელია ჩვენს შორის მართალი, იქ გამოჩნდება, ზეცაში!",
+        "https://thumbs.gfycat.com/RelievedSardonicGoa-size_restricted.gif",
+    ),
+    Wisdom(
+        "სიყვარული... სიყვარულია მშობელი ოცნებისა, ოცნება აღვიძებს კაცთა მოდგმის მთვლემარე გონებას, გონება აღძრავს ქმედებას, პლიუს-მინუს, ემ ცე კვადრატ (mc²), ეф, ფუძე (√) ვნებათაღელვის უსასრულობისა და შეცნობილი აუცილებლობისაკენ! მიდით ერთაოზ!",
+        "https://i.makeagif.com/media/7-09-2015/gLIbf3.gif",
+    ),
 ]
 
 WHEN_WHO = [
@@ -90,10 +96,6 @@ def send_async(update, context, *args, **kwargs):
 def send_async_gif(update, context, *args, **kwargs):
     context.bot.sendAnimation(
         chat_id=update.effective_chat.id, *args, **kwargs)
-
-# Define a few command handlers. These usually take the two arguments bot and
-# update. Error handlers also receive the raised TelegramError object in error.
-
 
 def start(update, context):
     update.message.reply_text("ერთაოზ ბრეგვაძე ძუყნურიდან!")
@@ -142,13 +144,11 @@ def when_who(update, context):
 
 
 def wisdom(update, context):
-    randomWisdom = random.choice(wisdoms)
-    send_async_gif(update, context, caption=randomWisdom[0],
-                   animation=randomWisdom[1])
+    random_wisdom: Wisdom = random.choice(WISDOMS)
+    send_async_gif(update, context, caption=random_wisdom.text, animation=random_wisdom.animation)
+
 
 # Introduce the bot to a chat its been added to
-
-
 def introduce(update, context):
     """
     Introduces the bot to a chat its been added to and saves the user id of the
