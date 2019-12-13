@@ -14,6 +14,4 @@
     black .
 
 
-User With VS Code
-
-    https://devblogs.microsoft.com/python/python-in-visual-studio-code-may-2018-release/
+To Setup with VS Code: https://github.com/psf/black#visual-studio-code    
