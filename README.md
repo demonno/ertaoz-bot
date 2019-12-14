@@ -15,7 +15,7 @@ Install packages in `bot_env`
  
 ## Enviromen Variables
 
-Tokens secrets and configurations storen in `.env` file create locally !do not commit in git
+Tokens secrets and configurations stored in `.env` file, create locally. !do not commit in git!
 
 ```ini
 ERTAOZ_TOKEN=
