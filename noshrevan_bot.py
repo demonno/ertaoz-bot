@@ -22,8 +22,7 @@ import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
@@ -32,12 +31,12 @@ logger = logging.getLogger(__name__)
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(update, context):
     """Send a message when the command /start is issued."""
-    update.message.reply_text('გამარჯობა! მე ვარ doc ნოშრევანი.')
+    update.message.reply_text("გამარჯობა! მე ვარ doc ნოშრევანი.")
 
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('აბე გლუკოზააა!')
+    update.message.reply_text("აბე გლუკოზააა!")
 
 
 def echo(update, context):
@@ -79,5 +78,5 @@ def main():
     updater.idle()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
