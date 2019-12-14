@@ -3,6 +3,7 @@
 import logging
 from datetime import datetime
 
+import pytz
 from telegram import ParseMode
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
@@ -223,9 +224,9 @@ def help(update, context):
 
 
 def notify_about_travelers_job(context):
-    today = datetime.now()
+    today = datetime.now(tz=pytz.timezone("Europe/Tallinn"))
 
-    if today.hour != 9:
+    if today.hour != 10:
         return
 
     travelers_today = []
