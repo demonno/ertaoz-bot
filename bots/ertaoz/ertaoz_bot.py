@@ -17,7 +17,7 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 TOKEN = "726693597:AAGuNw5J2QiDc-C7DKr2Sa4gaQFJy51E4Bc"
-BOTNAME = "ertaoz_bot"
+BOT_USERNAME = "ertaoz_bot"
 
 
 help_text = """ერთაოზი ძუყნურიდან!
@@ -195,7 +195,7 @@ def empty_message(update, context):
         new_members = update.message.new_chat_members
         for new_chat_member in new_members:
             # Bot was added to a group chat
-            if new_chat_member["username"] == BOTNAME:
+            if new_chat_member["username"] == BOT_USERNAME:
                 return introduce(update, context)
             # Another user joined the chat
             else:
@@ -203,7 +203,7 @@ def empty_message(update, context):
 
     # Someone left the chat
     elif hasattr(update.message, "left_chat_member"):
-        if update.message.left_chat_member.username != BOTNAME:
+        if update.message.left_chat_member.username != BOT_USERNAME:
             return goodbye(update, context)
 
 
@@ -249,7 +249,7 @@ def notify_about_travelers_job(context):
         context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message)
 
 
-def main():
+def run():
     """Run bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -286,4 +286,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()

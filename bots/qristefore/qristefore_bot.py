@@ -36,6 +36,9 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+BOT_USERNAME = "noshrevan_bot"
+
+
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
 reply_keyboard = [["Age", "Favourite colour"], ["Number of siblings", "Something else..."], ["Done"]]
@@ -124,7 +127,7 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
-def main():
+def run():
     # Create the Updater and pass it your bot's token.
     pp = PicklePersistence(filename="conversationbot")
     updater = Updater("842234941:AAEVoSwgpolP7dHwRJmuH1OsAVhdF7TD3Qo", persistence=pp, use_context=True)
@@ -165,4 +168,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()
