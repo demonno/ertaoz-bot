@@ -58,32 +58,19 @@ WISDOMS = [
 ]
 
 WHEN_WHO = [
-    (datetime(day=11, month=12, year=2019), datetime(
-        day=5, month=1, year=2020), ""),
-    (datetime(day=15, month=12, year=2019), datetime(
-        day=9, month=1, year=2020), ""),
-    (datetime(day=15, month=12, year=2019), datetime(
-        day=5, month=1, year=2020), ""),
-    (datetime(day=18, month=12, year=2019), datetime(
-        day=4, month=1, year=2020), ""),
-    (datetime(day=18, month=12, year=2019), datetime(
-        day=4, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(
-        day=19, month=1, year=2020), ""),
+    (datetime(day=11, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=15, month=12, year=2019), datetime(day=9, month=1, year=2020), ""),
+    (datetime(day=15, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
+    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
+    (datetime(day=22, month=12, year=2019), datetime(day=19, month=1, year=2020), ""),
 ]
 
 
@@ -94,8 +81,8 @@ def send_async(update, context, *args, **kwargs):
 
 @run_async
 def send_async_gif(update, context, *args, **kwargs):
-    context.bot.sendAnimation(
-        chat_id=update.effective_chat.id, *args, **kwargs)
+    context.bot.sendAnimation(chat_id=update.effective_chat.id, *args, **kwargs)
+
 
 def start(update, context):
     update.message.reply_text("ერთაოზ ბრეგვაძე ძუყნურიდან!")
@@ -108,13 +95,13 @@ def cat(update, context):
         cat_photo_url = cat_photo_url + cat_photo_params
     if cat_photo_url.endswith("/"):
         cat_photo_url = cat_photo_url[:-1]
-    context.bot.sendPhoto(
-        chat_id=update.effective_chat.id, photo=cat_photo_url)
+    context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=cat_photo_url)
 
 
 def order(update, context):
-    send_async_gif(update, context, caption="დახურეთ საინფორმაციო წყარო!",
-                   animation="https://s4.gifyu.com/images/shush.gif",)
+    send_async_gif(
+        update, context, caption="დახურეთ საინფორმაციო წყარო!", animation="https://s4.gifyu.com/images/shush.gif",
+    )
 
 
 def when_who(update, context):
@@ -133,8 +120,7 @@ def when_who(update, context):
 
         lines.append("{}-{} = <code>{}</code>".format(start, end, name))
 
-    today_txt = "<b>დღეს:</b> {}-{}-{}\n\n".format(datetime.now().day,
-                                                   datetime.now().month, datetime.now().year)
+    today_txt = "<b>დღეს:</b> {}-{}-{}\n\n".format(datetime.now().day, datetime.now().month, datetime.now().year)
     txt = today_txt + "\n".join(lines)
 
     if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
@@ -158,11 +144,7 @@ def introduce(update, context):
     chat_id = update.effective_chat.id
     invited = update.message.from_user.id
 
-    logger.info(
-        "Invited by {} to chat {} ({})".format(
-            invited, chat_id, update.message.chat.title
-        )
-    )
+    logger.info("Invited by {} to chat {} ({})".format(invited, chat_id, update.message.chat.title))
 
     text = "გამარჯობა {}! მე ვარ ერთაოზ ბრეგვაძე ძუკნურიდან. მე გავუიასნებ ხოლმე ამ ჩატის მიზანს ყველას ვინც შემოგვიერთდება :)".format(
         update.message.chat.title
@@ -175,11 +157,7 @@ def welcome(update, context, new_chat_member):
 
     message = update.message
     chat_id = message.chat.id
-    logger.info(
-        "{} joined to chat {} ({})".format(
-            new_chat_member["first_name"], chat_id, message.chat.title
-        )
-    )
+    logger.info("{} joined to chat {} ({})".format(new_chat_member["first_name"], chat_id, message.chat.title))
 
     text = """გამარჯობა {username}! კეთილი იყოს შენი მობრძანება {title}-ში :)
 
@@ -189,8 +167,7 @@ def welcome(update, context, new_chat_member):
     """
 
     # Replace placeholders and send message
-    text = text.format(
-        username=new_chat_member["first_name"], title=message.chat.title)
+    text = text.format(username=new_chat_member["first_name"], title=message.chat.title)
     send_async(update, context, text=text)
 
 
@@ -199,18 +176,12 @@ def goodbye(update, context):
 
     message = update.message
     chat_id = update.effective_chat.id
-    logger.info(
-        "{} left chat {} ({})".format(
-            message.left_chat_member.first_name, chat_id, message.chat.title
-        )
-    )
+    logger.info("{} left chat {} ({})".format(message.left_chat_member.first_name, chat_id, message.chat.title))
 
     text = "ნახვამდის, $username! :( "
 
     # Replace placeholders and send message
-    text = text.replace("$username", message.left_chat_member.first_name).replace(
-        "$title", message.chat.title
-    )
+    text = text.replace("$username", message.left_chat_member.first_name).replace("$title", message.chat.title)
     send_async(update, context, text=text, parse_mode=ParseMode.HTML)
 
 
@@ -220,10 +191,7 @@ def empty_message(update, context):
     group member, someone left the chat or if the bot has been added somewhere.
     """
 
-    if (
-        hasattr(update.message, "new_chat_members")
-        and len(update.message.new_chat_members) > 0
-    ):
+    if hasattr(update.message, "new_chat_members") and len(update.message.new_chat_members) > 0:
         new_members = update.message.new_chat_members
         for new_chat_member in new_members:
             # Bot was added to a group chat
@@ -245,8 +213,7 @@ def error(update, context):
 
 
 def help(update, context):
-    send_async(update, context, text=help_text,
-               parse_mode=ParseMode.MARKDOWN)
+    send_async(update, context, text=help_text, parse_mode=ParseMode.MARKDOWN)
 
 
 def notify_about_travelers_job(context):
@@ -270,12 +237,12 @@ def notify_about_travelers_job(context):
     if len(travelers_today) == 1:
         message = "დღეს მიემგზავრება: " + str(travelers_today[0])
     elif len(travelers_today) > 1:
-        message = "დღეს მიემგზავრებიან: " + ", ".join(travelers_today)
+        message = "დღეს მიემგზავრებიან: " + ", ".join(travelers_today[:-1]) + " და " + travelers_today[-1]
     elif len(travelers_today) == 0:
         if len(travelers_tomorrow) == 1:
             message = "ხვალ მიემგზავრება: " + str(travelers_tomorrow[0])
         elif len(travelers_tomorrow) > 1:
-            message = "ხვალ მიემგზავრებიან: " + ", ".join(travelers_tomorrow)
+            message = "ხვალ მიემგზავრებიან: " + ", ".join(travelers_tomorrow[:-1]) + " და " + travelers_tomorrow[-1]
 
     if message != "":
         context.bot.send_message(chat_id=TEST_GROUP_ID, text=message)
