@@ -255,12 +255,12 @@ def notify_about_travelers_job(context):
         context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message)
 
 
-def run():
+def run(token: str):
     """Run bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater(TOKEN, use_context=True)
+    updater = Updater(token, use_context=True)
     job = updater.job_queue
 
     # Get the dispatcher to register handlers
@@ -290,7 +290,3 @@ def run():
     # SIGABRT. This should be used most of the time, since start_polling() is
     # non-blocking and will stop the bot gracefully.
     updater.idle()
-
-
-if __name__ == "__main__":
-    run()

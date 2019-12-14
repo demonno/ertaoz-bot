@@ -2,18 +2,38 @@
 
 ## Install
 
-  pip install -r requirements.txt
+### Environment setup on Linux
+
+    sudo apt install python3.7 python3-venv python3.7-venv
+    python3.7 -m venv bot_env
+    source bot_env/bin/activate
+
+Install packages in `bot_env`
+
+    pip install -r requirements.txt
   
+ 
+## Enviromen Variables
+
+Tokens secrets and configurations storen in `.env` file create locally !do not commit in git
+
+```ini
+ERTAOZ_TOKEN=
+NOSHREVAN_TOKEN=
+QRISTEFORE_TOKEN=
+```
+ 
 ## Run locally 
 
 To run default bot:
 
     python main.py
     
-or explicitly 
+Or explicitly 
+
     python main.py --bot ertaoz_bot
     
-Check out help to run other bots
+Check out `--help` to run other bots
 
     python main.py -h
     python main.py --bot noshrevan_bot
