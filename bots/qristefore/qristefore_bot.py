@@ -127,10 +127,10 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
-def run():
+def run(token: str):
     # Create the Updater and pass it your bot's token.
     pp = PicklePersistence(filename="conversationbot")
-    updater = Updater("842234941:AAEVoSwgpolP7dHwRJmuH1OsAVhdF7TD3Qo", persistence=pp, use_context=True)
+    updater = Updater(token, persistence=pp, use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -165,7 +165,3 @@ def run():
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
-
-
-if __name__ == "__main__":
-    run()

@@ -1,5 +1,7 @@
 import argparse
 
+from environs import Env
+
 from bots.ertaoz import ertaoz_bot
 from bots.noshrevan import noshrevan_bot
 from bots.qristefore import qristefore_bot
@@ -21,12 +23,16 @@ def parse_args():
 
 
 if __name__ == "__main__":
+
+    env = Env()
+    env.read_env()
+
     arguments = parse_args()
     if arguments.bot_username == ertaoz_bot.BOT_USERNAME:
-        ertaoz_bot.run()
+        ertaoz_bot.run(token=env.str("ERTAOZ_TOKEN"))
     elif arguments.bot_username == qristefore_bot.BOT_USERNAME:
-        qristefore_bot.run()
+        qristefore_bot.run(token=env.str("QRISTEFORE_TOKEN"))
     elif arguments.bot_username == noshrevan_bot.BOT_USERNAME:
-        noshrevan_bot.run()
+        noshrevan_bot.run(token=env.str("NOSHREVAN_TOKEN"))
     else:
         raise Exception(f"{arguments.bot_username} not supported")
