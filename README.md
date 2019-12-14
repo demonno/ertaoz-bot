@@ -49,3 +49,12 @@ Check out `--help` to run other bots
 Install extension: `ms-python.python`
 
 To Setup with VS Code: https://github.com/psf/black#visual-studio-code    
+
+
+## Contribution Guidelines
+
+* Create New Issue: https://github.com/demonno/telegram_bots/issues/new
+* Link issue to https://github.com/demonno/telegram_bots/projects
+* Work on your branch
+* Create Pull Request and ask for reviews https://github.com/demonno/telegram_bots/compare
+* After merging to master bot is deployed automatically
