@@ -25,6 +25,7 @@ help_text = """ერთაოზი ძუყნურიდან!
 /`cat` - კატის ფოტოს გამოგზავნა
 /`order` - ჩატში წესრიგის დამყარება
 /`when_who` - ვიზეარის ფრენების სია
+/`about` - ინფორმაცია შემქმნელებზე
 
 /`ბრძანება@ertaoz_bot p1 p2`
 
@@ -132,6 +133,11 @@ def when_who(update, context):
 def wisdom(update, context):
     random_wisdom: Wisdom = random.choice(WISDOMS)
     send_async_gif(update, context, caption=random_wisdom.text, animation=random_wisdom.animation)
+
+
+def about(update, context):
+    txt = 'მადლობა ჩემს შემქმნელებს: <a href="https://github.com/demonno">demonno</a> <a href="https://github.com/pepela">pepela</a> და <a href="https://github.com/dmuml10">dmuml10</a>'
+    send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
 
 
 # Introduce the bot to a chat its been added to
@@ -267,6 +273,7 @@ def run():
     dp.add_handler(CommandHandler("order", order))
     dp.add_handler(CommandHandler("when_who", when_who))
     dp.add_handler(CommandHandler("wisdom", wisdom))
+    dp.add_handler(CommandHandler("about", about))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
