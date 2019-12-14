@@ -224,7 +224,7 @@ def help(update, context):
 
 
 def notify_about_travelers_job(context):
-    today = datetime.now(tz=pytz.timezone('Europe/Tallinn'))
+    today = datetime.now(tz=pytz.timezone("Europe/Tallinn"))
 
     if today.hour != 10:
         return
