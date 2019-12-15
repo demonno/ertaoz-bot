@@ -236,7 +236,7 @@ def help(update, context):
 def notify_about_travelers_job(context):
     today = datetime.now(tz=pytz.timezone("Europe/Tallinn"))
 
-    if today.hour != 10:
+    if today.hour != 9:
         return
 
     travelers_today = []
@@ -251,9 +251,13 @@ def notify_about_travelers_job(context):
                 travelers_tomorrow.append(name)
 
     message = ""
-    if len(travelers_today) >= 1:
-        travelers_txt = "\n ".join(travelers_today)
-        message = f"ხომ გითხარი მაინც გაიფრინდებიან თქო  შე გალსტუკიანო შენა! \n " f"გაფრინდნენ \n {travelers_txt}"
+
+    if len(travelers_today) == 1:
+        travelers_txt = "\n ".join(list(map(lambda x: f"<code>{x}</code>", travelers_today)))
+        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო! \n მიფრინავს \n {travelers_txt}"
+    if len(travelers_today) > 1:
+        travelers_txt = "\n ".join(list(map(lambda x: f"<code>{x}</code>", travelers_today)))
+        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო! \n მიფრინავენ \n {travelers_txt}"
     elif len(travelers_today) == 0:
         if len(travelers_tomorrow) == 1:
             message = "ხვალ მიემგზავრება: " + str(travelers_tomorrow[0])
@@ -261,8 +265,8 @@ def notify_about_travelers_job(context):
             message = "ხვალ მიემგზავრებიან: " + ", ".join(travelers_tomorrow[:-1]) + " და " + travelers_tomorrow[-1]
 
     if message != "":
-        context.bot.send_message(chat_id=TEST_GROUP_ID, text=message)
-        context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message)
+        context.bot.send_message(chat_id=TEST_GROUP_ID, text=message, parse_mode=ParseMode.HTML)
+        context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message, parse_mode=ParseMode.HTML)
 
 
 def weather(update, context):
