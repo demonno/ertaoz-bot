@@ -12,6 +12,7 @@ import random
 
 # Enable logging
 from bots.ertaoz.models import Wisdom
+from bots.utils.typing import send_typing_action
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
@@ -86,10 +87,12 @@ def send_async_gif(update, context, *args, **kwargs):
     context.bot.sendAnimation(chat_id=update.effective_chat.id, *args, **kwargs)
 
 
+@send_typing_action
 def start(update, context):
     update.message.reply_text("ერთაოზ ბრეგვაძე ძუყნურიდან!")
 
 
+@send_typing_action
 def cat(update, context):
     cat_photo_url = "https://cataas.com/cat/"
     if context.args:
@@ -100,12 +103,14 @@ def cat(update, context):
     context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=cat_photo_url)
 
 
+@send_typing_action
 def order(update, context):
     send_async_gif(
         update, context, caption="დახურეთ საინფორმაციო წყარო!", animation="https://s4.gifyu.com/images/shush.gif",
     )
 
 
+@send_typing_action
 def when_who(update, context):
     now = datetime.now()
     lines = []
@@ -131,11 +136,13 @@ def when_who(update, context):
         send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
 
 
+@send_typing_action
 def wisdom(update, context):
     random_wisdom: Wisdom = random.choice(WISDOMS)
     send_async_gif(update, context, caption=random_wisdom.text, animation=random_wisdom.animation)
 
 
+@send_typing_action
 def about(update, context):
     txt = 'მადლობა ჩემს შემქმნელებს: <a href="https://github.com/demonno">demonno</a> <a href="https://github.com/pepela">pepela</a> და <a href="https://github.com/dmuml10">dmuml10</a>'
     send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
@@ -159,6 +166,7 @@ def introduce(update, context):
     send_async(update, context, text=text)
 
 
+@send_typing_action
 def welcome(update, context, new_chat_member):
     """ Welcomes a user to the chat """
 
@@ -219,6 +227,7 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
+@send_typing_action
 def help(update, context):
     send_async(update, context, text=help_text, parse_mode=ParseMode.MARKDOWN)
 
