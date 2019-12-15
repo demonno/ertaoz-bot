@@ -29,6 +29,7 @@ help_text = """ერთაოზი ძუყნურიდან!
 /`when_who` - ვიზეარის ფრენების სია
 /`weather` - ამინდის პროგნოზი
 /`about` - ინფორმაცია შემქმნელებზე
+/`who_is_ertaoz` - ინფორმაცია ერთაოზზე
 
 /`ბრძანება@ertaoz_bot p1 p2`
 
@@ -109,6 +110,17 @@ def order(update, context):
     send_async_gif(
         update, context, caption="დახურეთ საინფორმაციო წყარო!", animation="https://s4.gifyu.com/images/shush.gif",
     )
+
+
+@send_typing_action
+def who_is_ertaoz(update, context):
+    text = """ Hobbies: physics, building ცათმფრენი, ტიტანური იდეები
+    Love interest: მარგალიტა
+    Friends: შავი დედალი, ბიძია-ბაბუა (ქრისტეფორე მგალობლიშვილი გარიყულადან)
+    ნაციხარი: yes
+    Net worth: შავი დედალი
+    """
+    send_async(update, context, text=text)
 
 
 @send_typing_action
@@ -299,6 +311,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("wisdom", wisdom))
     dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
+    dp.add_handler(CommandHandler("Ertaoz", who_is_ertaoz))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
