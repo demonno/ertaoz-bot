@@ -9,8 +9,8 @@ from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
 import random
 
-
 # Enable logging
+from bots.apis.weather_api import Weather
 from bots.ertaoz.models import Wisdom
 from bots.utils.typing import send_typing_action
 
@@ -27,6 +27,7 @@ help_text = """ერთაოზი ძუყნურიდან!
 /`cat` - კატის ფოტოს გამოგზავნა
 /`order` - ჩატში წესრიგის დამყარება
 /`when_who` - ვიზეარის ფრენების სია
+/`weather` - ამინდის პროგნოზი
 /`about` - ინფორმაცია შემქმნელებზე
 
 /`ბრძანება@ertaoz_bot p1 p2`
@@ -160,7 +161,7 @@ def introduce(update, context):
 
     logger.info("Invited by {} to chat {} ({})".format(invited, chat_id, update.message.chat.title))
 
-    text = "გამარჯობა {}! მე ვარ ერთაოზ ბრეგვაძე ძუკნურიდან. მე გავუიასნებ ხოლმე ამ ჩატის მიზანს ყველას ვინც შემოგვიერთდება :)".format(
+    text = "გამარჯობა {}! მე ვარ ერთაოზ ბრეგვაძე ძუყნურიდან. მე გავუიასნებ ხოლმე ამ ჩატის მიზანს ყველას ვინც შემოგვიერთდება :)".format(
         update.message.chat.title
     )
     send_async(update, context, text=text)
@@ -264,6 +265,16 @@ def notify_about_travelers_job(context):
         context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message)
 
 
+def weather(update, context):
+    api = Weather()
+    if context.args:
+        weather_info = api.weather_forecast(context.args[0])
+    else:
+        weather_info = api.weather_forecast("Tallinn")
+
+    send_async(update, context, text=weather_info)
+
+
 def run(token: str):
     """Run bot."""
     # Create the Updater and pass it your bot's token.
@@ -283,6 +294,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("when_who", when_who))
     dp.add_handler(CommandHandler("wisdom", wisdom))
     dp.add_handler(CommandHandler("about", about))
+    dp.add_handler(CommandHandler("weather", weather))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 

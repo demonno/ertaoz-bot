@@ -1,5 +1,6 @@
 python-telegram-bot==12.2.0
 environs==7.1.0
+requests==2.22.0
 pytz==2019.3
 
 # Dev Dependencies

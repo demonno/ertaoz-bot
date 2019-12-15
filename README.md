@@ -24,6 +24,7 @@ Tokens secrets and configurations stored in `.env` file, create locally. !do not
 ERTAOZ_TOKEN=
 NOSHREVAN_TOKEN=
 QRISTEFORE_TOKEN=
+WEATHER_API_ID=
 ```
  
 ## Run locally 
