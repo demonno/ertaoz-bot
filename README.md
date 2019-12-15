@@ -60,6 +60,9 @@ To Setup with VS Code: https://github.com/psf/black#visual-studio-code
 * Create New Issue: https://github.com/demonno/telegram_bots/issues/new
 * Link issue to https://github.com/demonno/telegram_bots/projects
 * Work on your branch, branch naming policy e{issue_number}
-* Create Pull Request and ask for reviews https://github.com/demonno/telegram_bots/compare
+* Create Pull Request and ask for reviews
 * Add fixes #{issue_number} in the body of pull request
+* Delete your branch after merge
 * After merging to master bot is deployed automatically
+
+[Read How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
