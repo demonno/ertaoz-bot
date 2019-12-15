@@ -114,7 +114,8 @@ def order(update, context):
 
 @send_typing_action
 def who_is_ertaoz(update, context):
-    text = """ Hobbies: physics, building ცათმფრენი, ტიტანური იდეები
+    text = """Info about Ertaoz... Bregvadze... Son of Mizana Bregvadze:
+    Hobbies: physics, building ცათმფრენი, ტიტანური იდეები
     Love interest: მარგალიტა
     Friends: შავი დედალი, ბიძია-ბაბუა (ქრისტეფორე მგალობლიშვილი გარიყულადან)
     ნაციხარი: yes
@@ -157,7 +158,7 @@ def wisdom(update, context):
 
 @send_typing_action
 def about(update, context):
-    txt = 'მადლობა ჩემს შემქმნელებს: <a href="https://github.com/demonno">demonno</a>, <a href="https://github.com/pepela">pepela</a>, <a href="https://github.com/dmuml10">dmuml10</a> და <a href="https://github.com/Dgebu">Dgebu</a>'
+    txt = 'მადლობა ჩემს შემქმნელებს: <a href="https://github.com/demonno">demonno</a>-ს, <a href="https://github.com/pepela">pepela</a>-ს, <a href="https://github.com/dmuml10">dmuml10</a-სა> და <a href="https://github.com/Dgebu">Dgebu</a>-ს'
     send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
 
 
@@ -311,7 +312,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("wisdom", wisdom))
     dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
-    dp.add_handler(CommandHandler("Ertaoz", who_is_ertaoz))
+    dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
