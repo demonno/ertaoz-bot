@@ -233,18 +233,17 @@ def notify_about_travelers_job(context):
     travelers_tomorrow = []
 
     for outbound, inbound, name in WHEN_WHO:
-        difference = (outbound - today).days
-        if difference >= 0 and difference <= 3:
+        difference = outbound.day - today.day
+        if 0 <= difference <= 3:
             if outbound.day - today.day == 0:
                 travelers_today.append(name)
             elif outbound.day - today.day == 1:
                 travelers_tomorrow.append(name)
 
     message = ""
-    if len(travelers_today) == 1:
-        message = "დღეს მიემგზავრება: " + str(travelers_today[0])
-    elif len(travelers_today) > 1:
-        message = "დღეს მიემგზავრებიან: " + ", ".join(travelers_today[:-1]) + " და " + travelers_today[-1]
+    if len(travelers_today) >= 1:
+        travelers_txt = "\n ".join(travelers_today)
+        message = f"ხომ გითხარი მაინც გაიფრინდებიან თქო  შე გალსტუკიანო შენა! \n " f"გაფრინდნენ \n {travelers_txt}"
     elif len(travelers_today) == 0:
         if len(travelers_tomorrow) == 1:
             message = "ხვალ მიემგზავრება: " + str(travelers_tomorrow[0])
