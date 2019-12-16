@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 TOKEN = "726693597:AAGuNw5J2QiDc-C7DKr2Sa4gaQFJy51E4Bc"
 BOT_USERNAME = "ertaoz_bot"
 
-help_text = """ერთაოზი ძუყნურიდან!
+HELP_TEXT = """ერთაოზი ძუყნურიდან!
 
 ბრძანებები:
 
@@ -31,19 +31,20 @@ help_text = """ერთაოზი ძუყნურიდან!
 /order - ჩატში წესრიგის დამყარება
 /when_who - ვიზეარის ფრენების სია
 /weather - ამინდის პროგნოზი
+/wisdom - შერეკილების სიბრძნე
 /about - ინფორმაცია შემქმნელებზე
-/who_is_ertaoz - ინფორმაცია ერთაოზზე
+/ertaoz - ინფორმაცია ერთაოზზე
 
-/`ბრძანება@ertaoz_bot p1 p2`
+/ბრძანება@ertaoz_bot p1 p2
 
 
 მაგალითად:
 
-/cat@ertaoz\_bot
-/cat@ertaoz\_bot cute
-/cat@ertaoz\_bot funny
-/cat@ertaoz\_bot says Love
-/cat@ertaoz\_bot cute says Love
+/cat@ertaoz_bot
+/cat@ertaoz_bot cute
+/cat@ertaoz_bot funny
+/cat@ertaoz_bot says Love
+/cat@ertaoz_bot cute says Love
 
 """
 TEST_GROUP_ID = -353748767
@@ -250,7 +251,7 @@ def error(update, context):
 
 @send_typing_action
 def help(update, context):
-    send_async(update, context, text=help_text, parse_mode=ParseMode.MARKDOWN)
+    send_async(update, context, text=HELP_TEXT)
 
 
 def notify_about_travelers_job(context):
