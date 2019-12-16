@@ -158,7 +158,7 @@ def wisdom(update, context):
 
 @send_typing_action
 def about(update, context):
-    txt = 'მადლობა ჩემს შემქმნელებს: <a href="https://github.com/demonno">demonno</a>-ს, <a href="https://github.com/pepela">pepela</a>-ს, <a href="https://github.com/dmuml10">dmuml10</a-სა> და <a href="https://github.com/Dgebu">Dgebu</a>-ს'
+    txt = 'მადლობა ჩემს შემქმნელებს: <a href="https://github.com/demonno">demonno</a>-ს, <a href="https://github.com/pepela">pepela</a>-ს, <a href="https://github.com/dmuml10">dmuml10</a>-სა და <a href="https://github.com/Dgebu">Dgebu</a>-ს'
     send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
 
 
