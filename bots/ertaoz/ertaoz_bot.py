@@ -10,6 +10,7 @@ from telegram.ext.dispatcher import run_async
 import random
 
 # Enable logging
+from bots import env
 from bots.apis.weather_api import Weather
 from bots.ertaoz.models import Wisdom
 from bots.utils.typing import send_typing_action
@@ -238,7 +239,10 @@ def empty_message(update, context):
 
 def error(update, context):
     """Log Errors caused by Updates."""
-    logger.warning('Update "%s" caused error "%s"', update, context.error)
+    message = f"Update {update} \n\n error: \n\n {context.error}"
+    logger.warning(message)
+    if env.bool("ERROR_REPORTING", False):
+        context.bot.send_message(chat_id=env.int("ERROR_REPORTING_CHAT_ID", TEST_GROUP_ID), text=message)
 
 
 @send_typing_action
