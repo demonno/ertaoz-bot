@@ -6,6 +6,7 @@ from datetime import datetime
 
 import pytz
 from telegram import ParseMode
+from telegram.error import BadRequest
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
 
@@ -106,7 +107,13 @@ def cat(update, context):
         cat_photo_url = cat_photo_url + cat_photo_params
     if cat_photo_url.endswith("/"):
         cat_photo_url = cat_photo_url[:-1]
-    context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=cat_photo_url)
+    try:
+        if "gif" in context.args:
+            context.bot.sendAnimation(chat_id=update.effective_chat.id, animation=cat_photo_url)
+        else:
+            context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=cat_photo_url)
+    except BadRequest:
+        send_async(update, context, text="ფისო ვერ მოიძებნა :(")
 
 
 @send_typing_action
