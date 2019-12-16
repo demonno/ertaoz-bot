@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
+import random
 from datetime import datetime
 
 import pytz
 from telegram import ParseMode
 from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
 from telegram.ext.dispatcher import run_async
-import random
 
 # Enable logging
 from bots import env
 from bots.apis.weather_api import Weather
 from bots.ertaoz.models import Wisdom
 from bots.utils.typing import send_typing_action
+from contributors import CONTRIBUTORS
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
@@ -21,7 +22,6 @@ logger = logging.getLogger(__name__)
 
 TOKEN = "726693597:AAGuNw5J2QiDc-C7DKr2Sa4gaQFJy51E4Bc"
 BOT_USERNAME = "ertaoz_bot"
-
 
 help_text = """ერთაოზი ძუყნურიდან!
 \nბრძანებები:\n
@@ -159,8 +159,9 @@ def wisdom(update, context):
 
 @send_typing_action
 def about(update, context):
-    txt = 'მადლობა ჩემს შემქმნელებს: <a href="https://github.com/demonno">demonno</a>-ს, <a href="https://github.com/pepela">pepela</a>-ს, <a href="https://github.com/dmuml10">dmuml10</a>-სა და <a href="https://github.com/Dgebu">Dgebu</a>-ს'
-    send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
+    *head, last = [f'<a href="{contributor.github_url}">{contributor.github}</a>' for contributor in CONTRIBUTORS]
+    gratitude = f"ჩემო შემქმნელნო - {', '.join(head)} და {last} ყელამდე ვარ თქვენი პატივისცემით!"
+    send_async(update, context, text=gratitude, parse_mode=ParseMode.HTML)
 
 
 # Introduce the bot to a chat its been added to
