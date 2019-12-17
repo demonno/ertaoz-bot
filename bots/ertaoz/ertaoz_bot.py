@@ -68,19 +68,19 @@ WISDOMS = [
 ]
 
 WHEN_WHO = [
-    (datetime(day=11, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=15, month=12, year=2019), datetime(day=9, month=1, year=2020), ""),
-    (datetime(day=15, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
-    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ""),
-    (datetime(day=22, month=12, year=2019), datetime(day=19, month=1, year=2020), ""),
+    (datetime(day=11, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
+    (datetime(day=15, month=12, year=2019), datetime(day=9, month=1, year=2020), ("", 0)),
+    (datetime(day=15, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
+    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ("", 0)),
+    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ("", 0)),
+    (datetime(day=22, month=12, year=2019), datetime(day=19, month=1, year=2020), ("", 0)),
 ]
 
 
@@ -139,7 +139,7 @@ def who_is_ertaoz(update, context):
 def when_who(update, context):
     now = datetime.now()
     lines = []
-    for outbound, inbound, name in WHEN_WHO:
+    for outbound, inbound, user in WHEN_WHO:
         if outbound <= now:
             start = "<i>{}</i>".format(str(outbound.day).zfill(2))
         else:
@@ -150,7 +150,8 @@ def when_who(update, context):
         else:
             end = "<b>{}</b>".format(str(inbound.day).zfill(2))
 
-        lines.append("{}-{} = <code>{}</code>".format(start, end, name))
+        name, telegramId = user
+        lines.append('{}-{} = <a href="tg://user?id={}">{}</a>'.format(start, end, telegramId, name))
 
     today_txt = "<b>დღეს:</b> {}-{}-{}\n\n".format(datetime.now().day, datetime.now().month, datetime.now().year)
     txt = today_txt + "\n".join(lines)
@@ -248,6 +249,18 @@ def empty_message(update, context):
             return goodbye(update, context)
 
 
+def all_message(update, context):
+    print(update, context)
+    existing_user_ids = [user_id for start, end, (name, user_id) in WHEN_WHO if user_id != 0]
+    if (
+        update.effective_chat["id"] in [TEST_GROUP_ID, NONAME_GROUP_ID]
+        and update.effective_user["is_bot"] == False
+        and update.effective_user["id"] not in existing_user_ids
+    ):
+        message = f"id: {update.effective_user['id']} first_name: {update.effective_user['first_name']} - username: {update.effective_user['username']}"
+        context.bot.send_message(chat_id=TEST_GROUP_ID, text=message)
+
+
 def error(update, context):
     """Log Errors caused by Updates."""
     message = f"Update {update} \n\n error: \n\n {context.error}"
@@ -270,27 +283,30 @@ def notify_about_travelers_job(context):
     travelers_today = []
     travelers_tomorrow = []
 
-    for outbound, inbound, name in WHEN_WHO:
+    for outbound, inbound, user in WHEN_WHO:
+        name, telegramId = user
         difference = outbound.day - today.day
         if 0 <= difference <= 3:
+            formatted_user = '<a href="tg://user?id={}">{}</a>'.format(telegramId, name)
             if outbound.day - today.day == 0:
-                travelers_today.append(name)
+                travelers_today.append(formatted_user)
             elif outbound.day - today.day == 1:
-                travelers_tomorrow.append(name)
+                travelers_tomorrow.append(formatted_user)
 
     message = ""
 
+    todady_travelers_text = "\n".join(travelers_today)
+    tomorrow_travelers_text = "\n".join(travelers_tomorrow)
+
     if len(travelers_today) == 1:
-        travelers_txt = "\n ".join(list(map(lambda x: f"<code>{x}</code>", travelers_today)))
-        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო! \n მიფრინავს \n {travelers_txt}"
+        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო!\nმიფრინავს\n{todady_travelers_text}"
     if len(travelers_today) > 1:
-        travelers_txt = "\n ".join(list(map(lambda x: f"<code>{x}</code>", travelers_today)))
-        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო! \n მიფრინავენ \n {travelers_txt}"
+        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო!\nმიფრინავენ\n{todady_travelers_text}"
     elif len(travelers_today) == 0:
         if len(travelers_tomorrow) == 1:
-            message = "ხვალ მიემგზავრება: " + str(travelers_tomorrow[0])
+            message = f"ხვალ გაფრინდება:\n{tomorrow_travelers_text}"
         elif len(travelers_tomorrow) > 1:
-            message = "ხვალ მიემგზავრებიან: " + ", ".join(travelers_tomorrow[:-1]) + " და " + travelers_tomorrow[-1]
+            message = f"ხვალ გაფრინდებიან\n{tomorrow_travelers_text}"
 
     if message != "":
         context.bot.send_message(chat_id=TEST_GROUP_ID, text=message, parse_mode=ParseMode.HTML)
@@ -330,6 +346,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
+    dp.add_handler(MessageHandler(Filters.all, all_message))
 
     # log all errors
     dp.add_error_handler(error)
