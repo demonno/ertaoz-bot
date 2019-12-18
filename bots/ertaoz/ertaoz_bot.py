@@ -14,6 +14,7 @@ from telegram.ext.dispatcher import run_async
 from bots import env
 from bots.apis.weather_api import Weather
 from bots.ertaoz.models import Wisdom
+from bots.ertaoz.places import PLACES
 from bots.utils.typing import send_typing_action
 from contributors import CONTRIBUTORS
 
@@ -133,6 +134,13 @@ def who_is_ertaoz(update, context):
     Net worth: შავი დედალი
     """
     send_async(update, context, text=text)
+
+
+@send_typing_action
+def shonzo_way(update, context):
+    place = random.choice(PLACES)
+    message = f"{place.name}\n{place.url}"
+    send_async(update, context, text=message)
 
 
 @send_typing_action
@@ -344,6 +352,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
+    dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
     dp.add_handler(MessageHandler(Filters.all, all_message))
