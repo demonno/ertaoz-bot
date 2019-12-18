@@ -13,14 +13,16 @@ from telegram.ext.dispatcher import run_async
 # Enable logging
 from bots import env
 from bots.apis.weather_api import Weather
-from bots.ertaoz.models import Wisdom
 from bots.ertaoz.places import PLACES
 from bots.utils.typing import send_typing_action
 from contributors import CONTRIBUTORS
+from dal import DataAccessLayer
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+dal = DataAccessLayer()
 
 TOKEN = "726693597:AAGuNw5J2QiDc-C7DKr2Sa4gaQFJy51E4Bc"
 BOT_USERNAME = "ertaoz_bot"
@@ -52,22 +54,6 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 """
 TEST_GROUP_ID = -353748767
 NONAME_GROUP_ID = -360632460
-
-WISDOMS = [
-    Wisdom("სიყვარული ვერტიკალურია და თან ბრუნვადი", "https://s4.gifyu.com/images/love.gif"),
-    Wisdom(
-        "არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, არადა, უნდა გავფრინდეთ!",
-        "https://thumbs.gfycat.com/AdventurousColossalBobwhite-size_restricted.gif",
-    ),
-    Wisdom(
-        "რომელია ჩვენს შორის მართალი, იქ გამოჩნდება, ზეცაში!",
-        "https://thumbs.gfycat.com/RelievedSardonicGoa-size_restricted.gif",
-    ),
-    Wisdom(
-        "სიყვარული... სიყვარულია მშობელი ოცნებისა, ოცნება აღვიძებს კაცთა მოდგმის მთვლემარე გონებას, გონება აღძრავს ქმედებას, პლიუს-მინუს, ემ ცე კვადრატ (mc²), ეф, ფუძე (√) ვნებათაღელვის უსასრულობისა და შეცნობილი აუცილებლობისაკენ! მიდით ერთაოზ!",
-        "https://i.makeagif.com/media/7-09-2015/gLIbf3.gif",
-    ),
-]
 
 WHEN_WHO = [
     (datetime(day=11, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
@@ -173,7 +159,7 @@ def when_who(update, context):
 
 @send_typing_action
 def wisdom(update, context):
-    random_wisdom: Wisdom = random.choice(WISDOMS)
+    random_wisdom = dal.wisdoms.fetch_random()
     send_async_gif(update, context, caption=random_wisdom.text, animation=random_wisdom.animation)
 
 
