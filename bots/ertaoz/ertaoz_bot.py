@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
-import random
 from datetime import datetime
 
 import pytz
@@ -13,7 +12,6 @@ from telegram.ext.dispatcher import run_async
 # Enable logging
 from bots import env
 from bots.apis.weather_api import Weather
-from bots.ertaoz.places import PLACES
 from bots.utils.typing import send_typing_action
 from contributors import CONTRIBUTORS
 from dal import DataAccessLayer
@@ -125,8 +123,8 @@ def who_is_ertaoz(update, context):
 
 @send_typing_action
 def shonzo_way(update, context):
-    place = random.choice(PLACES)
-    message = f"{place.name}\n{place.url}"
+    random_place = dal.places.fetch_random()
+    message = f"{random_place.name}\n{random_place.url}"
     send_async(update, context, text=message)
 
 
