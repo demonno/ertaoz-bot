@@ -4,13 +4,15 @@ import logging
 from datetime import datetime
 
 import pytz
+import requests
 from telegram import ParseMode
 from telegram.error import BadRequest
-from telegram.ext import Updater, MessageHandler, CommandHandler, Filters
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.ext.dispatcher import run_async
 
 # Enable logging
 from bots import env
+from bots.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
 from bots.apis.weather_api import Weather
 from bots.utils.typing import send_typing_action
 from contributors import CONTRIBUTORS
@@ -37,6 +39,7 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /about - ინფორმაცია შემქმნელებზე
 /ertaoz - ინფორმაცია ერთაოზზე
 /shonzo_way - სად ვჭამო თბილისში
+/random - შემთხვევითი
 
 /ბრძანება@ertaoz_bot p1 p2
 
@@ -306,6 +309,29 @@ def notify_about_travelers_job(context):
         context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message, parse_mode=ParseMode.HTML)
 
 
+def random(update, context):
+    random_api = RandomAPI()
+    try:
+        resource = None
+        params = {}
+        if len(context.args) > 0:
+            resource, tail = context.args[0], context.args[1:]
+            if "fact" in tail:
+                params["fact"] = True
+        r = random_api.fetch(resource, **params)
+    except RandomNotImplemented:
+        context.bot.sendMessage(chat_id=update.effective_chat.id, text="ინფორმაცია ვერ მოვიძიე :(")
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"HTTPError: by {e}")
+    else:
+        if r.type == ResourceType.IMG:
+            context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=r.content)
+        elif r.type == ResourceType.GIF:
+            context.bot.sendAnimation(chat_id=update.effective_chat.id, animation=r.content)
+        elif r.type == ResourceType.TEXT:
+            context.bot.sendMessage(chat_id=update.effective_chat.id, text=r.content)
+
+
 def weather(update, context):
     api = Weather()
     if context.args:
@@ -338,6 +364,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("weather", weather))
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
+    dp.add_handler(CommandHandler("random", random))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
     dp.add_handler(MessageHandler(Filters.all, all_message))
