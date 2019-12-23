@@ -43,13 +43,13 @@ class TripsDal:
 
     def fetch_outbound_trip(self, user_id):
         try:
-            self.OUTBOUND_TRIPS[user_id]
+            return self.OUTBOUND_TRIPS[user_id]
         except KeyError:
             raise TripNotFoundError(f"Outbound trip not found for user <{user_id}>")
 
     def fetch_inbound_trip(self, user_id):
         try:
-            self.INBOUND_TRIPS[user_id]
+            return self.INBOUND_TRIPS[user_id]
         except KeyError:
             raise TripNotFoundError(f"Inbound trip not found for user <{user_id}>")
 

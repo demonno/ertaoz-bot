@@ -34,6 +34,7 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /cat - კატის ფოტოს გამოგზავნა
 /order - ჩატში წესრიგის დამყარება
 /when_who - ვიზეარის ფრენების სია
+/schedule - ვიზეარის ფრენების სია
 /weather - ამინდის პროგნოზი
 /wisdom - შერეკილების სიბრძნე
 /about - ინფორმაცია შემქმნელებზე
@@ -132,30 +133,28 @@ def shonzo_way(update, context):
 
 
 @send_typing_action
-def when_who(update, context):
-    now = datetime.now()
-    lines = []
-    for outbound, inbound, user in WHEN_WHO:
-        if outbound <= now:
-            start = "<i>{}</i>".format(str(outbound.day).zfill(2))
-        else:
-            start = "<b>{}</b>".format(str(outbound.day).zfill(2))
+def schedule(update, context):
+    now = datetime.now().date()
+    lines = [f"<b>დღეს:</b> {now.strftime('%d-%m-%Y')}\n"]
 
-        if inbound <= now:
-            end = "<i>{}</i>".format(str(inbound.day).zfill(2))
-        else:
-            end = "<b>{}</b>".format(str(inbound.day).zfill(2))
+    def format_date(d):
+        tag = "i" if d <= now else "b"
+        return f"<{tag}>{str(d.day).zfill(2)}</{tag}>"
 
-        name, telegramId = user
-        lines.append('{}-{} = <a href="tg://user?id={}">{}</a>'.format(start, end, telegramId, name))
+    def format_user(u):
+        return f'<a href="{u.telegram_url}">{u.name}</a>'
 
-    today_txt = "<b>დღეს:</b> {}-{}-{}\n\n".format(datetime.now().day, datetime.now().month, datetime.now().year)
-    txt = today_txt + "\n".join(lines)
+    for user in dal.users.fetch_all():
+        goes = dal.trips.fetch_outbound_trip(user.id)
+        comes = dal.trips.fetch_inbound_trip(user.id)
 
-    if update.effective_chat.id not in [TEST_GROUP_ID, NONAME_GROUP_ID]:
-        send_async(update, context, text="აქ ვერ გეტყვი.")
+        lines.append(f"{format_date(goes)}-{format_date(comes)} = {format_user(user)}")
+
+    if update.effective_chat.id in [TEST_GROUP_ID, NONAME_GROUP_ID]:
+        text = "\n".join(lines)
+        send_async(update, context, text=text, parse_mode=ParseMode.HTML)
     else:
-        send_async(update, context, text=txt, parse_mode=ParseMode.HTML)
+        send_async(update, context, text="აქ ვერ გეტყვი.")
 
 
 @send_typing_action
@@ -358,7 +357,8 @@ def run(token: str):
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("cat", cat))
     dp.add_handler(CommandHandler("order", order))
-    dp.add_handler(CommandHandler("when_who", when_who))
+    dp.add_handler(CommandHandler("when_who", schedule))
+    dp.add_handler(CommandHandler("schedule", schedule))
     dp.add_handler(CommandHandler("wisdom", wisdom))
     dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
