@@ -57,22 +57,6 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 TEST_GROUP_ID = -353748767
 NONAME_GROUP_ID = -360632460
 
-WHEN_WHO = [
-    (datetime(day=11, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
-    (datetime(day=15, month=12, year=2019), datetime(day=9, month=1, year=2020), ("", 0)),
-    (datetime(day=15, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
-    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ("", 0)),
-    (datetime(day=18, month=12, year=2019), datetime(day=4, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=5, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=12, month=1, year=2020), ("", 0)),
-    (datetime(day=22, month=12, year=2019), datetime(day=19, month=1, year=2020), ("", 0)),
-]
-
 
 @run_async
 def send_async(update, context, *args, **kwargs):
@@ -244,18 +228,6 @@ def empty_message(update, context):
             return goodbye(update, context)
 
 
-def all_message(update, context):
-    print(update, context)
-    existing_user_ids = [user_id for start, end, (name, user_id) in WHEN_WHO if user_id != 0]
-    if (
-        update.effective_chat["id"] in [TEST_GROUP_ID, NONAME_GROUP_ID]
-        and update.effective_user["is_bot"] == False
-        and update.effective_user["id"] not in existing_user_ids
-    ):
-        message = f"id: {update.effective_user['id']} first_name: {update.effective_user['first_name']} - username: {update.effective_user['username']}"
-        context.bot.send_message(chat_id=TEST_GROUP_ID, text=message)
-
-
 def error(update, context):
     """Log Errors caused by Updates."""
     message = f"Update {update} \n\n error: \n\n {context.error}"
@@ -278,14 +250,14 @@ def notify_about_travelers_job(context):
     travelers_today = []
     travelers_tomorrow = []
 
-    for outbound, inbound, user in WHEN_WHO:
-        name, telegramId = user
-        difference = outbound.day - today.day
+    for user in dal.users.fetch_all():
+        inbound = dal.trips.fetch_inbound_trip(user.id)
+        difference = inbound.day - today.day
         if 0 <= difference <= 3:
-            formatted_user = '<a href="tg://user?id={}">{}</a>'.format(telegramId, name)
-            if outbound.day - today.day == 0:
+            formatted_user = '<a href="tg://user?id={}">{}</a>'.format(user.telegram_id, user.name)
+            if inbound.day - today.day == 0:
                 travelers_today.append(formatted_user)
-            elif outbound.day - today.day == 1:
+            elif inbound.day - today.day == 1:
                 travelers_tomorrow.append(formatted_user)
 
     message = ""
@@ -367,7 +339,6 @@ def run(token: str):
     dp.add_handler(CommandHandler("random", random))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
-    dp.add_handler(MessageHandler(Filters.all, all_message))
 
     # log all errors
     dp.add_error_handler(error)
