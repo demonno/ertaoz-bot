@@ -1,19 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
+import random
 from datetime import datetime
 
+import pickledb as pickledb
 import pytz
 import requests
 from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.ext.dispatcher import run_async
+from transliterate import detect_language, translit
+from transliterate.exceptions import LanguageDetectionError
 
-# Enable logging
 from bots import env
+from bots.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
 from bots.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
 from bots.apis.weather_api import Weather
+from bots.utils.emoji import strip_emoji, strip_spaces
+from bots.utils.permissions import admin_required, group_required
 from bots.utils.typing import send_typing_action
 from contributors import CONTRIBUTORS
 from dal import DataAccessLayer
@@ -21,6 +27,20 @@ from dal import DataAccessLayer
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+"""
+Create database object
+Database schema:
+<chat_id>_adm -> user id of the user who invited the bot
+<chat_id>_spb -> user id of the user who is target of  mocking spongebob
+chats -> list of chat ids where the bot has received messages in.
+"""
+
+# Create database object
+db = pickledb.load("bot.db", True)
+
+if not db.get("chats"):
+    db.set("chats", [])
 
 dal = DataAccessLayer()
 
@@ -41,6 +61,10 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /ertaoz - ინფორმაცია ერთაოზზე
 /shonzo_way - სად ვჭამო თბილისში
 /random - შემთხვევითი
+
+-- admin --
+/unleash_spongebob - გააქტიურე სპანჩ ბობი {user_id}
+/restrain_spongebob - დააოკე სპანჩ ბობი
 
 /ბრძანება@ertaoz_bot p1 p2
 
@@ -166,9 +190,9 @@ def introduce(update, context):
 
     logger.info("Invited by {} to chat {} ({})".format(invited, chat_id, update.message.chat.title))
 
-    text = "გამარჯობა {}! მე ვარ ერთაოზ ბრეგვაძე ძუყნურიდან. მე გავუიასნებ ხოლმე ამ ჩატის მიზანს ყველას ვინც შემოგვიერთდება :)".format(
-        update.message.chat.title
-    )
+    db.set(str(chat_id) + "_adm", invited)
+
+    text = f"გამარჯობა {update.message.chat.title}! მე ვარ ერთაოზ ბრეგვაძე ძუყნურიდან. :)"
     send_async(update, context, text=text)
 
 
@@ -212,6 +236,14 @@ def empty_message(update, context):
     group member, someone left the chat or if the bot has been added somewhere.
     """
 
+    # Keep chatlist
+    chats = db.get("chats")
+
+    if update.message.chat.id not in chats:
+        chats.append(update.message.chat.id)
+        db.set("chats", chats)
+        logger.info("I have been added to %d chats" % len(chats))
+
     if hasattr(update.message, "new_chat_members") and len(update.message.new_chat_members) > 0:
         new_members = update.message.new_chat_members
         for new_chat_member in new_members:
@@ -226,6 +258,68 @@ def empty_message(update, context):
     elif hasattr(update.message, "left_chat_member"):
         if update.message.left_chat_member.username != BOT_USERNAME:
             return goodbye(update, context)
+
+
+def mocking_spongebob(update, context):
+    chat_str = str(update.message.chat_id)
+    if (
+        update.effective_chat["id"] in [TEST_GROUP_ID, NONAME_GROUP_ID]
+        and update.effective_user["is_bot"] == False
+        and str(update.effective_user["id"]) == db.get(f"{chat_str}_spb")
+    ):
+        imageflip = ImageflipAPI()
+
+        first_name = update.effective_user["first_name"]
+        user_message = update.message["text"]
+
+        # skip short messages
+        if user_message is None or len(user_message) < 5 or len(user_message) > 150 or "http" in user_message:
+            return
+        # Strip emoji
+        user_message = strip_emoji(user_message)
+        user_message = strip_spaces(user_message)
+        lang = "en"
+
+        # Transliteration
+        try:
+            lang = detect_language(user_message)
+        except LanguageDetectionError:
+            logger.error(f"Failed to detect language {user_message}")
+        if lang and lang != "en":
+            user_message = translit(user_message, lang, reversed=True)
+
+        # Meme text setup
+        top = f"{first_name}: {user_message}"
+        mocked_line = "".join(random.choice([k.upper(), k]) for k in user_message)
+        bottom = f"ME: {mocked_line}"
+        try:
+            url = imageflip.mocking_spongebob_url(top, bottom)
+        except ImageFlipApiException:
+            logger.error(f"Failed to generate meme {top}, {bottom}")
+        else:
+            context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=url)
+
+
+@group_required
+@admin_required(db=db)
+def unleash_spongebob(update, context):
+    chat_id = update.message.chat_id
+    chat_str = str(chat_id)
+    target_user_id = context.args[0] if len(context.args) > 0 else None
+    if target_user_id is None:
+        context.bot.sendMessage(chat_id=chat_id, text="user_id აუცილებელია!")
+        return
+    db.set(f"{chat_str}_spb", target_user_id)
+    context.bot.sendMessage(chat_id=chat_id, text="შესრულებულია")
+
+
+@group_required
+@admin_required(db=db)
+def restrain_spongebob(update, context):
+    chat_id = update.message.chat_id
+    chat_str = str(chat_id)
+    db.set(f"{chat_str}_spb", None)
+    context.bot.sendMessage(chat_id=chat_id, text="შესრულებულია")
 
 
 def error(update, context):
@@ -280,7 +374,7 @@ def notify_about_travelers_job(context):
         context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message, parse_mode=ParseMode.HTML)
 
 
-def random(update, context):
+def random_handler(update, context):
     random_api = RandomAPI()
     try:
         resource = None
@@ -336,9 +430,13 @@ def run(token: str):
     dp.add_handler(CommandHandler("weather", weather))
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
-    dp.add_handler(CommandHandler("random", random))
+    dp.add_handler(CommandHandler("random", random_handler))
+
+    dp.add_handler(CommandHandler("unleash_spongebob", unleash_spongebob))
+    dp.add_handler(CommandHandler("restrain_spongebob", restrain_spongebob))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
+    dp.add_handler(MessageHandler(Filters.all, mocking_spongebob))
 
     # log all errors
     dp.add_error_handler(error)

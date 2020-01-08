@@ -1,5 +1,5 @@
 # telegram_bots
-![Github actions](https://github.com/demonno/telegram_bots/workflows/bothealth/badge.svg) 
+![Github actions](https://github.com/demonno/telegram_bots/workflows/bothealth/badge.svg)
 
 ![Logo](art/logo.png)
 
@@ -14,8 +14,8 @@
 Install packages in `bot_env`
 
     pip install -r requirements.txt
-  
- 
+
+
 ## Enviromen Variables
 
 Tokens secrets and configurations stored in `.env` file, create locally. !do not commit in git!
@@ -24,39 +24,42 @@ Tokens secrets and configurations stored in `.env` file, create locally. !do not
 ERTAOZ_TOKEN=
 NOSHREVAN_TOKEN=
 QRISTEFORE_TOKEN=
+
 WEATHER_API_ID=
+IMGFLIP_API_USERNAME=
+IMGFLIP_API_PASSWORD=
 
 ERROR_REPORTING=false
 ERROR_REPORTING_CHAT_ID=-00000000
 
 ```
- 
-## Run locally 
+
+## Run locally
 
 To run default bot:
 
     python main.py
-    
-Or explicitly 
+
+Or explicitly
 
     python main.py --bot ertaoz_bot
-    
+
 Check out `--help` to run other bots
 
     python main.py -h
     python main.py --bot noshrevan_bot
     python main.py --bot qristefore_bot
-    
-    
-## Run black formatter 
+
+
+## Run black formatter
 
     black .
 
-### Vscode - 
+### Vscode -
 
 Install extension: `ms-python.python`
 
-To Setup with VS Code: https://github.com/psf/black#visual-studio-code    
+To Setup with VS Code: https://github.com/psf/black#visual-studio-code
 
 
 ## Contribution Guidelines
