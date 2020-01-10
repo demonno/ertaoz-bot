@@ -7,7 +7,7 @@ from datetime import datetime
 import pickledb as pickledb
 import pytz
 import requests
-from telegram import ParseMode
+from telegram import ParseMode, Message, Chat
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.ext.dispatcher import run_async
@@ -49,8 +49,10 @@ BOT_USERNAME = "ertaoz_bot"
 
 HELP_TEXT = """ერთაოზი ძუყნურიდან!
 
-ბრძანებები:
+დახმარება:
+/help {ბრძანება} - დახმარება
 
+ბრძანებები:
 /cat - კატის ფოტოს გამოგზავნა
 /order - ჩატში წესრიგის დამყარება
 /when_who - ვიზეარის ფრენების სია
@@ -66,18 +68,8 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /unleash_spongebob - გააქტიურე სპანჩ ბობი {user_id}
 /restrain_spongebob - დააოკე სპანჩ ბობი
 
-/ბრძანება@ertaoz_bot p1 p2
-
-
-მაგალითად:
-
-/cat@ertaoz_bot
-/cat@ertaoz_bot cute
-/cat@ertaoz_bot funny
-/cat@ertaoz_bot says Love
-/cat@ertaoz_bot cute says Love
-
 """
+
 TEST_GROUP_ID = -353748767
 NONAME_GROUP_ID = -360632460
 
@@ -261,11 +253,12 @@ def empty_message(update, context):
 
 
 def mocking_spongebob(update, context):
-    chat_str = str(update.message.chat_id)
+    message = update.message
+    chat = message.chat
     if (
-        update.effective_chat["id"] in [TEST_GROUP_ID, NONAME_GROUP_ID]
+        chat
         and update.effective_user["is_bot"] == False
-        and str(update.effective_user["id"]) == db.get(f"{chat_str}_spb")
+        and str(update.effective_user["id"]) == db.get(f"{str(chat.id)}_spb")
     ):
         imageflip = ImageflipAPI()
 
@@ -332,7 +325,21 @@ def error(update, context):
 
 @send_typing_action
 def help(update, context):
-    send_async(update, context, text=HELP_TEXT)
+    command = context.args[0] if len(context.args) > 0 else None
+    if command == "random":
+        text = (
+            "ბრძანება შემთხვევითი \n"
+            "გამოაგზავნის ფოტოს, ფაქტს ანიმაციას და ა.შ. \n"
+            "მუშაობს მხოლოდ ქვემოთ ჩამოთვლილი კატეგორიები. \n\n"
+            "/random \n"
+            "/random cat \n"
+            "/random cat fact \n"
+            "/random {cat, dog, panda, fox, bird, koala} \n"
+            "/random {cat, dog, panda, fox, bird, koala} fact \n"
+        )
+        send_async(update, context, text=text)
+    else:
+        send_async(update, context, text=HELP_TEXT)
 
 
 def notify_about_travelers_job(context):
@@ -407,6 +414,25 @@ def weather(update, context):
     send_async(update, context, text=weather_info)
 
 
+def log_members(update, context):
+    message = update.message
+    chat = message.chat
+    from_user = update.message.from_user
+    if chat and from_user and chat.type == Chat.GROUP and not from_user.is_bot:
+        chat_id = chat.id
+        members = db.get(f"{str(chat_id)}_members")
+        if not members:
+            members = []
+            db.set(f"{str(chat_id)}_members", members)
+
+        if from_user.id not in members and from_user.id not in [i.telegram_id for i in list(dal.users.fetch_all())]:
+            members.append(from_user.id)
+            db.set(f"{str(chat_id)}_members", members)
+
+            text = f"""{chat.title}: {from_user.first_name} {from_user.last_name}: {from_user.id} """
+            context.bot.sendMessage(chat_id=TEST_GROUP_ID, text=text)
+
+
 def run(token: str):
     """Run bot."""
     # Create the Updater and pass it your bot's token.
@@ -436,7 +462,8 @@ def run(token: str):
     dp.add_handler(CommandHandler("restrain_spongebob", restrain_spongebob))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
-    dp.add_handler(MessageHandler(Filters.all, mocking_spongebob))
+    dp.add_handler(MessageHandler(Filters.all, log_members))
+    dp.add_handler(MessageHandler(Filters.text, mocking_spongebob))
 
     # log all errors
     dp.add_error_handler(error)
