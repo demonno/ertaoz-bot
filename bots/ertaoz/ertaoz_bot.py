@@ -418,7 +418,7 @@ def log_members(update, context):
     message = update.message
     chat = message.chat
     from_user = update.message.from_user
-    if chat and from_user and chat.type == Chat.GROUP and not from_user.is_bot:
+    if chat and from_user and chat.type in [Chat.GROUP, Chat.SUPERGROUP] and not from_user.is_bot:
         chat_id = chat.id
         members = db.get(f"{str(chat_id)}_members")
         if not members:
