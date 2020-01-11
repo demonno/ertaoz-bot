@@ -36,7 +36,7 @@ class TripsDal:
         8: date(day=5, month=1, year=2020),
         9: date(day=5, month=1, year=2020),
         10: date(day=12, month=1, year=2020),
-        11: date(day=12, month=1, year=2020),
+        11: date(day=29, month=1, year=2020),
         12: date(day=12, month=1, year=2020),
         13: date(day=19, month=1, year=2020),
     }
