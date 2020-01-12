@@ -19,6 +19,12 @@
     pip install -r requirements.txt
 
 
+## Create Test Bot using Botfather 
+
+For testing prurposes its recommended to have a separate testing bot.
+Read docs about how to create a bot [here](https://core.telegram.org/bots#3-how-do-i-create-a-bot).
+After you will get token which you can set in `.env` file
+
 ## Enviroment Variables
 
 Tokens secrets and configurations stored in `.env` file, create locally. !do not commit in git!
