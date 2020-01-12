@@ -5,18 +5,21 @@
 
 ## Install
 
-### Environment setup on Linux
+### Setup python virtual env on Linux
 
     sudo apt install python3.7 python3-venv python3.7-venv
-    python3.7 -m venv bot_env
-    source bot_env/bin/activate
+    python3.7 -m venv .env
 
-Install packages in `bot_env`
+### Activate env
+
+    source .env/bin/activate
+
+### Install packages in `.env`
 
     pip install -r requirements.txt
 
 
-## Enviromen Variables
+## Enviroment Variables
 
 Tokens secrets and configurations stored in `.env` file, create locally. !do not commit in git!
 
