@@ -18,11 +18,13 @@ from bots import env
 from bots.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
 from bots.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
 from bots.apis.weather_api import Weather
+from bots.apis.minify_api import MinifyAPI, MinifyAPIException
 from bots.utils.emoji import strip_emoji, strip_spaces
 from bots.utils.permissions import admin_required, group_required
 from bots.utils.typing import send_typing_action
 from contributors import CONTRIBUTORS
 from dal import DataAccessLayer
+import validators
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
@@ -53,6 +55,7 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /help {ბრძანება} - დახმარება
 
 ბრძანებები:
+/minify - URL-ის შემცირება
 /cat - კატის ფოტოს გამოგზავნა
 /order - ჩატში წესრიგის დამყარება
 /when_who - ვიზეარის ფრენების სია
@@ -111,6 +114,24 @@ def order(update, context):
     send_async_gif(
         update, context, caption="დახურეთ საინფორმაციო წყარო!", animation="https://s4.gifyu.com/images/shush.gif",
     )
+
+
+@send_typing_action
+def minify(update, context):
+    link = context.args[0] if len(context.args) > 0 else None
+    if link == None or not validators.url(link):
+        send_async(update, context, text="/minify {url} აუცილებელია გადმოსცეთ URL")
+        return
+
+    minifier = MinifyAPI()
+    try:
+        minified = minifier.minify_link(link)
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"HTTPError: by {e}")
+    except MinifyAPIException as e:
+        logger.error(f"MinifyAPIException: by {e}")
+    else:
+        send_async(update, context, text=minified)
 
 
 @send_typing_action
@@ -456,6 +477,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("weather", weather))
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
+    dp.add_handler(CommandHandler("minify", minify))
     dp.add_handler(CommandHandler("random", random_handler))
 
     dp.add_handler(CommandHandler("unleash_spongebob", unleash_spongebob))

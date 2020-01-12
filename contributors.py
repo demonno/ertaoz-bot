@@ -16,4 +16,5 @@ CONTRIBUTORS = [
     Contributor("dmuml10"),
     Contributor("Dgebu"),
     Contributor("MadViper"),
+    Contributor("bichiko"),
 ]
