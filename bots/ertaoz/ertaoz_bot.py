@@ -60,7 +60,8 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /order - ჩატში წესრიგის დამყარება
 /when_who - ვიზეარის ფრენების სია
 /schedule - ვიზეარის ფრენების სია
-/weather - ამინდის პროგნოზი
+/weather - მიმდინარე ამინდი
+/weather_forecast - ამინდის პროგნოზი
 /wisdom - შერეკილების სიბრძნე
 /about - ინფორმაცია შემქმნელებზე
 /ertaoz - ინფორმაცია ერთაოზზე
@@ -428,6 +429,16 @@ def random_handler(update, context):
 def weather(update, context):
     api = Weather()
     if context.args:
+        weather_info = api.weather(context.args[0])
+    else:
+        weather_info = api.weather("Tallinn")
+
+    send_async(update, context, text=weather_info)
+
+
+def weather_forecast(update, context):
+    api = Weather()
+    if context.args:
         weather_info = api.weather_forecast(context.args[0])
     else:
         weather_info = api.weather_forecast("Tallinn")
@@ -475,6 +486,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("wisdom", wisdom))
     dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
+    dp.add_handler(CommandHandler("weather_forecast", weather_forecast))
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
     dp.add_handler(CommandHandler("minify", minify))
