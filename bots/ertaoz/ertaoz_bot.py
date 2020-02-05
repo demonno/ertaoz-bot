@@ -505,9 +505,6 @@ def run(token: str):
     # Start the Bot
     updater.start_polling()
 
-    # schedule a job every hour min(60 * 60)
-    job.run_repeating(notify_about_travelers_job, interval=3600, first=0)
-
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or
     # SIGABRT. This should be used most of the time, since start_polling() is
     # non-blocking and will stop the bot gracefully.
