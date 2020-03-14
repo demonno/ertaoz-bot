@@ -18,6 +18,7 @@ from bots import env
 from bots.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
 from bots.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
 from bots.apis.weather_api import Weather
+from bots.apis.corona_api import Corona
 from bots.apis.minify_api import MinifyAPI, MinifyAPIException
 from bots.utils.emoji import strip_emoji, strip_spaces
 from bots.utils.permissions import admin_required, group_required
@@ -62,6 +63,7 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /schedule - ვიზეარის ფრენების სია
 /weather - მიმდინარე ამინდი
 /weather_forecast - ამინდის პროგნოზი
+/corona - ინფორმაცია COVID-19 ზე
 /wisdom - შერეკილების სიბრძნე
 /about - ინფორმაცია შემქმნელებზე
 /ertaoz - ინფორმაცია ერთაოზზე
@@ -446,6 +448,16 @@ def weather_forecast(update, context):
     send_async(update, context, text=weather_info)
 
 
+def corona(update, context):
+    api = Corona()
+    if context.args:
+        corona_info = api.corona(context.args[0])
+    else:
+        corona_info = api.corona("Estonia")
+
+    send_async(update, context, text=corona_info)
+
+
 def log_members(update, context):
     message = update.message
     chat = message.chat
@@ -487,6 +499,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
     dp.add_handler(CommandHandler("weather_forecast", weather_forecast))
+    dp.add_handler(CommandHandler("corona", corona))
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
     dp.add_handler(CommandHandler("minify", minify))
