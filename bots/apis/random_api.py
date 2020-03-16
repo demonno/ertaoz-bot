@@ -39,6 +39,13 @@ class RandomAPI:
 
         return Resource(ResourceType.IMG, r.json()["link"])
 
+    def fetch_animu_resource(self, resource: str) -> Resource:
+        url = f"{self.api_url}/animu/{resource}"
+        r = requests.get(url)
+        r.raise_for_status()
+
+        return Resource(ResourceType.GIF, r.json()["link"])
+
     def fetch_fact_resource(self, resource: str) -> Resource:
         url = f"{self.api_url}/facts/{resource}"
         r = requests.get(url)
@@ -74,5 +81,9 @@ class RandomAPI:
             if params.get("fact") == True:
                 return self.fetch_fact_resource("koala")
             return self.fetch_img_resource("koala")
+        elif resource in ["wink"]:
+            return self.fetch_animu_resource("wink")
+        elif resource in ["hug"]:
+            return self.fetch_animu_resource("hug")
 
         raise RandomNotImplemented
