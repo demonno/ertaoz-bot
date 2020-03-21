@@ -25,7 +25,7 @@ class Corona:
 
             if city.lower() == "top":
                 result = ""
-                for i in range(5):
+                for i in range(10):
                     city_name = countries_data[i]["country_name"]
                     cases = countries_data[i]["cases"]
                     new_cases = countries_data[i]["new_cases"]
@@ -37,12 +37,15 @@ class Corona:
                         cases = data["cases"]
                         new_cases = data["new_cases"]
                         recovered = data["total_recovered"]
+                        critical = data["serious_critical"]
                         death = data["deaths"]
+                        new_death = data["new_deaths"]
                         result = (
-                            f"{city} დაავადებული: 🤒 {cases}\n"
-                            f"ახალი შემთხვევა: 😷 +{new_cases}\n"
+                            f"{city} დაავადებული: 😷 {cases}\n"
+                            f"ახალი შემთხვევა: 🤧 +{new_cases}\n"
                             f"გამოჯანმრთელებული: 😊 {recovered}\n"
-                            f"გარდაცვლილი: 💀 {death}"
+                            f"კრიტიკულ მდგომარეობაში: 🤒 {critical}\n"
+                            f"გარდაცვლილი: 💀 {death}  +{new_death}"
                         )
                         return result
             return data_not_found()
