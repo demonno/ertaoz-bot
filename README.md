@@ -8,13 +8,13 @@
 ### Setup python virtual env on Linux
 
     sudo apt install python3.7 python3-venv python3.7-venv
-    python3.7 -m venv .env
+    python3.7 -m venv venv
 
 ### Activate env
 
-    source .env/bin/activate
+    source venv/bin/activate
 
-### Install packages in `.env`
+### Install packages in `venv`
 
     pip install -r requirements.txt
 
