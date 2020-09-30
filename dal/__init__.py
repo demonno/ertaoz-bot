@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 
 from dal.places_dal import PlacesDal
 from dal.trips_dal import TripsDal
-from dal.users_dal import UsersDal
 from dal.wisdom_dal import WisdomDal
 
 
@@ -10,5 +9,4 @@ from dal.wisdom_dal import WisdomDal
 class DataAccessLayer:
     places: PlacesDal = field(default_factory=PlacesDal)
     wisdoms: WisdomDal = field(default_factory=WisdomDal)
-    users: UsersDal = field(default_factory=UsersDal)
     trips: TripsDal = field(default_factory=TripsDal)

@@ -59,8 +59,6 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /minify - URL-ის შემცირება
 /cat - კატის ფოტოს გამოგზავნა
 /order - ჩატში წესრიგის დამყარება
-/when_who - ვიზეარის ფრენების სია
-/schedule - ვიზეარის ფრენების სია
 /weather - მიმდინარე ამინდი
 /weather_forecast - ამინდის პროგნოზი
 /corona - ინფორმაცია COVID-19 ზე
@@ -154,31 +152,6 @@ def shonzo_way(update, context):
     random_place = dal.places.fetch_random()
     message = f"{random_place.name}\n{random_place.url}"
     send_async(update, context, text=message)
-
-
-@send_typing_action
-def schedule(update, context):
-    now = datetime.now().date()
-    lines = [f"<b>დღეს:</b> {now.strftime('%d-%m-%Y')}\n"]
-
-    def format_date(d):
-        tag = "i" if d <= now else "b"
-        return f"<{tag}>{str(d.day).zfill(2)}</{tag}>"
-
-    def format_user(u):
-        return f'<a href="{u.telegram_url}">{u.name}</a>'
-
-    for user in dal.users.fetch_all():
-        goes = dal.trips.fetch_outbound_trip(user.id)
-        comes = dal.trips.fetch_inbound_trip(user.id)
-
-        lines.append(f"{format_date(goes)}-{format_date(comes)} = {format_user(user)}")
-
-    if update.effective_chat.id in [TEST_GROUP_ID, NONAME_GROUP_ID]:
-        text = "\n".join(lines)
-        send_async(update, context, text=text, parse_mode=ParseMode.HTML)
-    else:
-        send_async(update, context, text="აქ ვერ გეტყვი.")
 
 
 @send_typing_action
@@ -366,45 +339,6 @@ def help(update, context):
         send_async(update, context, text=HELP_TEXT)
 
 
-def notify_about_travelers_job(context):
-    today = datetime.now(tz=pytz.timezone("Europe/Tallinn"))
-
-    if today.hour != 9:
-        return
-
-    travelers_today = []
-    travelers_tomorrow = []
-
-    for user in dal.users.fetch_all():
-        inbound = dal.trips.fetch_inbound_trip(user.id)
-        difference = inbound.day - today.day
-        if 0 <= difference <= 3:
-            formatted_user = '<a href="tg://user?id={}">{}</a>'.format(user.telegram_id, user.name)
-            if inbound.day - today.day == 0:
-                travelers_today.append(formatted_user)
-            elif inbound.day - today.day == 1:
-                travelers_tomorrow.append(formatted_user)
-
-    message = ""
-
-    todady_travelers_text = "\n".join(travelers_today)
-    tomorrow_travelers_text = "\n".join(travelers_tomorrow)
-
-    if len(travelers_today) == 1:
-        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო!\nმიფრინავს\n{todady_travelers_text}"
-    if len(travelers_today) > 1:
-        message = f"ხომ გითხარი, გაფრინდებიან მეთქი, შე გალსტუკიანო!\nმიფრინავენ\n{todady_travelers_text}"
-    elif len(travelers_today) == 0:
-        if len(travelers_tomorrow) == 1:
-            message = f"ხვალ გაფრინდება:\n{tomorrow_travelers_text}"
-        elif len(travelers_tomorrow) > 1:
-            message = f"ხვალ გაფრინდებიან\n{tomorrow_travelers_text}"
-
-    if message != "":
-        context.bot.send_message(chat_id=TEST_GROUP_ID, text=message, parse_mode=ParseMode.HTML)
-        context.bot.send_message(chat_id=NONAME_GROUP_ID, text=message, parse_mode=ParseMode.HTML)
-
-
 def random_handler(update, context):
     random_api = RandomAPI()
     try:
@@ -458,25 +392,6 @@ def corona(update, context):
     send_async(update, context, text=corona_info)
 
 
-def log_members(update, context):
-    message = update.message
-    chat = message.chat
-    from_user = update.message.from_user
-    if chat and from_user and chat.type in [Chat.GROUP, Chat.SUPERGROUP] and not from_user.is_bot:
-        chat_id = chat.id
-        members = db.get(f"{str(chat_id)}_members")
-        if not members:
-            members = []
-            db.set(f"{str(chat_id)}_members", members)
-
-        if from_user.id not in members and from_user.id not in [i.telegram_id for i in list(dal.users.fetch_all())]:
-            members.append(from_user.id)
-            db.set(f"{str(chat_id)}_members", members)
-
-            text = f"""{chat.title}: {from_user.first_name} {from_user.last_name}: {from_user.id} """
-            context.bot.sendMessage(chat_id=TEST_GROUP_ID, text=text)
-
-
 def run(token: str):
     """Run bot."""
     # Create the Updater and pass it your bot's token.
@@ -493,8 +408,6 @@ def run(token: str):
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("cat", cat))
     dp.add_handler(CommandHandler("order", order))
-    dp.add_handler(CommandHandler("when_who", schedule))
-    dp.add_handler(CommandHandler("schedule", schedule))
     dp.add_handler(CommandHandler("wisdom", wisdom))
     dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
@@ -509,7 +422,6 @@ def run(token: str):
     dp.add_handler(CommandHandler("restrain_spongebob", restrain_spongebob))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
-    dp.add_handler(MessageHandler(Filters.all, log_members))
     dp.add_handler(MessageHandler(Filters.text, mocking_spongebob))
 
     # log all errors
