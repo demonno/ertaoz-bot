@@ -2,10 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import random
-from datetime import datetime
 
-import pickledb as pickledb
-import pytz
 import requests
 from telegram import ParseMode, Message, Chat
 from telegram.error import BadRequest
@@ -14,16 +11,13 @@ from telegram.ext.dispatcher import run_async
 from transliterate import detect_language, translit
 from transliterate.exceptions import LanguageDetectionError
 
-from bots import env
 from bots.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
 from bots.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
 from bots.apis.weather_api import Weather
 from bots.apis.corona_api import Corona
 from bots.apis.minify_api import MinifyAPI, MinifyAPIException
 from bots.utils.emoji import strip_emoji, strip_spaces
-from bots.utils.permissions import admin_required, group_required
 from bots.utils.typing import send_typing_action
-from contributors import CONTRIBUTORS
 from dal import DataAccessLayer
 import validators
 
@@ -38,12 +32,6 @@ Database schema:
 <chat_id>_spb -> user id of the user who is target of  mocking spongebob
 chats -> list of chat ids where the bot has received messages in.
 """
-
-# Create database object
-db = pickledb.load("bot.db", True)
-
-if not db.get("chats"):
-    db.set("chats", [])
 
 dal = DataAccessLayer()
 
@@ -63,7 +51,6 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /weather_forecast - ამინდის პროგნოზი
 /corona - ინფორმაცია COVID-19 ზე
 /wisdom - შერეკილების სიბრძნე
-/about - ინფორმაცია შემქმნელებზე
 /ertaoz - ინფორმაცია ერთაოზზე
 /shonzo_way - სად ვჭამო თბილისში
 /random - შემთხვევითი
@@ -73,9 +60,6 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /restrain_spongebob - დააოკე სპანჩ ბობი
 
 """
-
-TEST_GROUP_ID = -353748767
-NONAME_GROUP_ID = -360632460
 
 
 @run_async
@@ -160,13 +144,6 @@ def wisdom(update, context):
     send_async_gif(update, context, caption=random_wisdom.text, animation=random_wisdom.animation)
 
 
-@send_typing_action
-def about(update, context):
-    *head, last = [f'<a href="{contributor.github_url}">{contributor.github}</a>' for contributor in CONTRIBUTORS]
-    gratitude = f"ჩემო შემქმნელნო - {', '.join(head)} და {last} ყელამდე ვარ თქვენი პატივისცემით!"
-    send_async(update, context, text=gratitude, parse_mode=ParseMode.HTML)
-
-
 # Introduce the bot to a chat its been added to
 def introduce(update, context):
     """
@@ -178,8 +155,6 @@ def introduce(update, context):
     invited = update.message.from_user.id
 
     logger.info("Invited by {} to chat {} ({})".format(invited, chat_id, update.message.chat.title))
-
-    db.set(str(chat_id) + "_adm", invited)
 
     text = f"გამარჯობა {update.message.chat.title}! მე ვარ ერთაოზ ბრეგვაძე ძუყნურიდან. :)"
     send_async(update, context, text=text)
@@ -225,14 +200,6 @@ def empty_message(update, context):
     group member, someone left the chat or if the bot has been added somewhere.
     """
 
-    # Keep chatlist
-    chats = db.get("chats")
-
-    if update.message.chat.id not in chats:
-        chats.append(update.message.chat.id)
-        db.set("chats", chats)
-        logger.info("I have been added to %d chats" % len(chats))
-
     if hasattr(update.message, "new_chat_members") and len(update.message.new_chat_members) > 0:
         new_members = update.message.new_chat_members
         for new_chat_member in new_members:
@@ -252,11 +219,7 @@ def empty_message(update, context):
 def mocking_spongebob(update, context):
     message = update.message
     chat = message.chat
-    if (
-        chat
-        and update.effective_user["is_bot"] == False
-        and str(update.effective_user["id"]) == db.get(f"{str(chat.id)}_spb")
-    ):
+    if chat and update.effective_user["is_bot"] == False:
         imageflip = ImageflipAPI()
 
         first_name = update.effective_user["first_name"]
@@ -288,36 +251,6 @@ def mocking_spongebob(update, context):
             logger.error(f"Failed to generate meme {top}, {bottom}")
         else:
             context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=url)
-
-
-@group_required
-@admin_required(db=db)
-def unleash_spongebob(update, context):
-    chat_id = update.message.chat_id
-    chat_str = str(chat_id)
-    target_user_id = context.args[0] if len(context.args) > 0 else None
-    if target_user_id is None:
-        context.bot.sendMessage(chat_id=chat_id, text="user_id აუცილებელია!")
-        return
-    db.set(f"{chat_str}_spb", target_user_id)
-    context.bot.sendMessage(chat_id=chat_id, text="შესრულებულია")
-
-
-@group_required
-@admin_required(db=db)
-def restrain_spongebob(update, context):
-    chat_id = update.message.chat_id
-    chat_str = str(chat_id)
-    db.set(f"{chat_str}_spb", None)
-    context.bot.sendMessage(chat_id=chat_id, text="შესრულებულია")
-
-
-def error(update, context):
-    """Log Errors caused by Updates."""
-    message = f"Update {update} \n\n error: \n\n {context.error}"
-    logger.warning(message)
-    if env.bool("ERROR_REPORTING", False):
-        context.bot.send_message(chat_id=env.int("ERROR_REPORTING_CHAT_ID", TEST_GROUP_ID), text=message)
 
 
 @send_typing_action
@@ -409,7 +342,6 @@ def run(token: str):
     dp.add_handler(CommandHandler("cat", cat))
     dp.add_handler(CommandHandler("order", order))
     dp.add_handler(CommandHandler("wisdom", wisdom))
-    dp.add_handler(CommandHandler("about", about))
     dp.add_handler(CommandHandler("weather", weather))
     dp.add_handler(CommandHandler("weather_forecast", weather_forecast))
     dp.add_handler(CommandHandler("corona", corona))
@@ -418,14 +350,8 @@ def run(token: str):
     dp.add_handler(CommandHandler("minify", minify))
     dp.add_handler(CommandHandler("random", random_handler))
 
-    dp.add_handler(CommandHandler("unleash_spongebob", unleash_spongebob))
-    dp.add_handler(CommandHandler("restrain_spongebob", restrain_spongebob))
-
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
     dp.add_handler(MessageHandler(Filters.text, mocking_spongebob))
-
-    # log all errors
-    dp.add_error_handler(error)
 
     # Start the Bot
     updater.start_polling()

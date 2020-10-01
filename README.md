@@ -31,8 +31,6 @@ Tokens secrets and configurations stored in `.env` file, create locally. !do not
 
 ```ini
 ERTAOZ_TOKEN=
-NOSHREVAN_TOKEN=
-QRISTEFORE_TOKEN=
 
 WEATHER_API_ID=
 IMGFLIP_API_USERNAME=
