@@ -1,4 +1,4 @@
-# telegram_bots
+# Ertaoz Bot
 ![Github actions](https://github.com/demonno/telegram_bots/workflows/bothealth/badge.svg)
 
 ![Logo](art/logo.png)
