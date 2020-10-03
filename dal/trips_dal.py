@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import List, Iterable
+from typing import Iterable, List
 
 import pytz
 
@@ -58,7 +58,9 @@ class TripsDal:
         today = datetime.now(tz=pytz.timezone("Europe/Tallinn"))
 
         trips = {
-            user_id: departure for user_id, departure in self.OUTBOUND_TRIPS.items() if today.day - departure.day == 0
+            user_id: departure
+            for user_id, departure in self.OUTBOUND_TRIPS.items()
+            if today.day - departure.day == 0
         }
 
         yield from trips.keys()
@@ -68,7 +70,9 @@ class TripsDal:
         today = datetime.now(tz=pytz.timezone("Europe/Tallinn"))
 
         trips = {
-            user_id: departure for user_id, departure in self.OUTBOUND_TRIPS.items() if today.day - departure.day == 1
+            user_id: departure
+            for user_id, departure in self.OUTBOUND_TRIPS.items()
+            if today.day - departure.day == 1
         }
 
         yield from trips.keys()
