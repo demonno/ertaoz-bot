@@ -31,7 +31,10 @@ def admin_required(*args, **kwargs):
             chat_id = update.message.chat_id
             chat_str = str(chat_id)
             if db.get(chat_str + "_adm") != update.message.from_user.id:
-                context.bot.sendMessage(chat_id=chat_id, text="ამ სურვილს მხოლოდ იმას შევუსრულებ ვინც ჯგუფში მომიწვია!")
+                context.bot.sendMessage(
+                    chat_id=chat_id,
+                    text="ამ სურვილს მხოლოდ იმას შევუსრულებ ვინც ჯგუფში მომიწვია!",
+                )
                 return False
 
             return func(update, context, *args, **kwargs)

@@ -17,7 +17,7 @@
     pip install -r requirements.txt
 
 
-## Create Test Bot using Botfather 
+## Create Test Bot using Botfather
 
 For testing prurposes its recommended to have a separate testing bot.
 Read docs about how to create a bot [here](https://core.telegram.org/bots#3-how-do-i-create-a-bot).

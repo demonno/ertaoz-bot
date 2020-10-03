@@ -21,7 +21,9 @@ from bots.utils.emoji import strip_emoji, strip_spaces
 from bots.utils.typing import send_typing_action
 from dal import DataAccessLayer
 
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +76,9 @@ def cat(update, context):
         cat_photo_url = cat_photo_url[:-1]
     try:
         if "gif" in context.args:
-            context.bot.sendAnimation(chat_id=update.effective_chat.id, animation=cat_photo_url)
+            context.bot.sendAnimation(
+                chat_id=update.effective_chat.id, animation=cat_photo_url
+            )
         else:
             context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=cat_photo_url)
     except BadRequest:
@@ -84,14 +88,17 @@ def cat(update, context):
 @send_typing_action
 def order(update, context):
     send_async_gif(
-        update, context, caption="დახურეთ საინფორმაციო წყარო!", animation="https://s4.gifyu.com/images/shush.gif",
+        update,
+        context,
+        caption="დახურეთ საინფორმაციო წყარო!",
+        animation="https://s4.gifyu.com/images/shush.gif",
     )
 
 
 @send_typing_action
 def minify(update, context):
     link = context.args[0] if len(context.args) > 0 else None
-    if link == None or not validators.url(link):
+    if link is None or not validators.url(link):
         send_async(update, context, text="/minify {url} აუცილებელია გადმოსცეთ URL")
         return
 
@@ -128,7 +135,9 @@ def shonzo_way(update, context):
 @send_typing_action
 def wisdom(update, context):
     random_wisdom = dal.wisdoms.fetch_random()
-    send_async_gif(update, context, caption=random_wisdom.text, animation=random_wisdom.animation)
+    send_async_gif(
+        update, context, caption=random_wisdom.text, animation=random_wisdom.animation
+    )
 
 
 # Introduce the bot to a chat its been added to
@@ -141,9 +150,15 @@ def introduce(update, context):
     chat_id = update.effective_chat.id
     invited = update.message.from_user.id
 
-    logger.info("Invited by {} to chat {} ({})".format(invited, chat_id, update.message.chat.title))
+    logger.info(
+        "Invited by {} to chat {} ({})".format(
+            invited, chat_id, update.message.chat.title
+        )
+    )
 
-    text = f"გამარჯობა {update.message.chat.title}! მე ვარ ერთაოზ ბრეგვაძე ძუყნურიდან. :)"
+    text = (
+        f"გამარჯობა {update.message.chat.title}! მე ვარ ერთაოზ ბრეგვაძე ძუყნურიდან. :)"
+    )
     send_async(update, context, text=text)
 
 
@@ -153,7 +168,11 @@ def welcome(update, context, new_chat_member):
 
     message = update.message
     chat_id = message.chat.id
-    logger.info("{} joined to chat {} ({})".format(new_chat_member["first_name"], chat_id, message.chat.title))
+    logger.info(
+        "{} joined to chat {} ({})".format(
+            new_chat_member["first_name"], chat_id, message.chat.title
+        )
+    )
 
     text = """გამარჯობა {username}! კეთილი იყოს შენი მობრძანება {title}-ში :)
 
@@ -172,12 +191,18 @@ def goodbye(update, context):
 
     message = update.message
     chat_id = update.effective_chat.id
-    logger.info("{} left chat {} ({})".format(message.left_chat_member.first_name, chat_id, message.chat.title))
+    logger.info(
+        "{} left chat {} ({})".format(
+            message.left_chat_member.first_name, chat_id, message.chat.title
+        )
+    )
 
     text = "ნახვამდის, $username! :( "
 
     # Replace placeholders and send message
-    text = text.replace("$username", message.left_chat_member.first_name).replace("$title", message.chat.title)
+    text = text.replace("$username", message.left_chat_member.first_name).replace(
+        "$title", message.chat.title
+    )
     send_async(update, context, text=text, parse_mode=ParseMode.HTML)
 
 
@@ -187,7 +212,10 @@ def empty_message(update, context):
     group member, someone left the chat or if the bot has been added somewhere.
     """
 
-    if hasattr(update.message, "new_chat_members") and len(update.message.new_chat_members) > 0:
+    if (
+        hasattr(update.message, "new_chat_members")
+        and len(update.message.new_chat_members) > 0
+    ):
         new_members = update.message.new_chat_members
         for new_chat_member in new_members:
             # Bot was added to a group chat
@@ -206,14 +234,19 @@ def empty_message(update, context):
 def mocking_spongebob(update, context):
     message = update.message
     chat = message.chat
-    if chat and update.effective_user["is_bot"] == False:
+    if chat and update.effective_user["is_bot"] is False:
         imageflip = ImageflipAPI()
 
         first_name = update.effective_user["first_name"]
         user_message = update.message["text"]
 
         # skip short messages
-        if user_message is None or len(user_message) < 5 or len(user_message) > 150 or "http" in user_message:
+        if (
+            user_message is None
+            or len(user_message) < 5
+            or len(user_message) > 150
+            or "http" in user_message
+        ):
             return
         # Strip emoji
         user_message = strip_emoji(user_message)
@@ -270,14 +303,18 @@ def random_handler(update, context):
                 params["fact"] = True
         r = random_api.fetch(resource, **params)
     except RandomNotImplemented:
-        context.bot.sendMessage(chat_id=update.effective_chat.id, text="ინფორმაცია ვერ მოვიძიე :(")
+        context.bot.sendMessage(
+            chat_id=update.effective_chat.id, text="ინფორმაცია ვერ მოვიძიე :("
+        )
     except requests.exceptions.HTTPError as e:
         logger.error(f"HTTPError: by {e}")
     else:
         if r.type == ResourceType.IMG:
             context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=r.content)
         elif r.type == ResourceType.GIF:
-            context.bot.sendAnimation(chat_id=update.effective_chat.id, animation=r.content)
+            context.bot.sendAnimation(
+                chat_id=update.effective_chat.id, animation=r.content
+            )
         elif r.type == ResourceType.TEXT:
             context.bot.sendMessage(chat_id=update.effective_chat.id, text=r.content)
 
@@ -318,7 +355,6 @@ def run(token: str):
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
     updater = Updater(token, use_context=True)
-    job = updater.job_queue
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher

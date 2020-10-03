@@ -5,9 +5,13 @@ from dal.models import Wisdom
 
 class WisdomDal:
     WISDOM_LIST = [
-        Wisdom(text="სიყვარული ვერტიკალურია და თან ბრუნვადი", animation="https://s4.gifyu.com/images/love.gif"),
         Wisdom(
-            text="არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, " "არადა, უნდა გავფრინდეთ!",
+            text="სიყვარული ვერტიკალურია და თან ბრუნვადი",
+            animation="https://s4.gifyu.com/images/love.gif",
+        ),
+        Wisdom(
+            text="არა, ყმაწვილო, არა! ასეთი ცოდნით ვერ გავფრინდებით, "
+            "არადა, უნდა გავფრინდეთ!",
             animation="https://thumbs.gfycat.com/AdventurousColossalBobwhite-size_restricted.gif",
         ),
         Wisdom(

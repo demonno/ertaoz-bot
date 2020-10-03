@@ -16,7 +16,10 @@ class Corona:
     def corona(self, city):
         resp = requests.get(
             "https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php",
-            headers={"X-RapidAPI-Host": "coronavirus-monitor.p.rapidapi.com", "X-RapidAPI-Key": self.corona_api_id},
+            headers={
+                "X-RapidAPI-Host": "coronavirus-monitor.p.rapidapi.com",
+                "X-RapidAPI-Key": self.corona_api_id,
+            },
         )
 
         if resp.status_code == 200:

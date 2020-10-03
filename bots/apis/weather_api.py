@@ -42,14 +42,20 @@ class Weather:
             temp = round(weather_data["main"]["temp"])
             temp_emoji = "🌡️"
             feels_like = round(weather_data["main"]["feels_like"])
-            weather_emoji = self.weather_emoji_dict[weather_data["weather"][0]["icon"][:-1]]
+            weather_emoji = self.weather_emoji_dict[
+                weather_data["weather"][0]["icon"][:-1]
+            ]
             weather_info = weather_data["weather"][0]["description"]
             wind = weather_data["wind"]["speed"]
             wind_emoji = "🌪" if weather_data["wind"]["speed"] > 30 else "💨"
             timezone = weather_data["timezone"]
-            sunrise = datetime.datetime.utcfromtimestamp((weather_data["sys"]["sunrise"]) + timezone)
+            sunrise = datetime.datetime.utcfromtimestamp(
+                (weather_data["sys"]["sunrise"]) + timezone
+            )
             sunrise_emoji = "🌅"
-            sunset = datetime.datetime.utcfromtimestamp((weather_data["sys"]["sunset"]) + timezone)
+            sunset = datetime.datetime.utcfromtimestamp(
+                (weather_data["sys"]["sunset"]) + timezone
+            )
             sunset_emoji = "🌇"
             sunrise_hour = sunrise.hour
             sunrise_minute = sunrise.minute
@@ -94,7 +100,9 @@ class Weather:
                 if weather_dict[date.day].max_temp < temp:
                     weather_dict[date.day].max_temp = temp
 
-                weather_dict[date.day].emoji = self.weather_emoji_dict[data["weather"][0]["icon"][:-1]]
+                weather_dict[date.day].emoji = self.weather_emoji_dict[
+                    data["weather"][0]["icon"][:-1]
+                ]
                 weather_dict[date.day].description = data["weather"][0]["description"]
                 weather_dict[date.day].date = str(date.day) + "-" + date.strftime("%B")
 
