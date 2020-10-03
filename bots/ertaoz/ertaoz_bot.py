@@ -5,7 +5,7 @@ import random
 
 import requests
 import validators
-from telegram import Chat, Message, ParseMode
+from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.ext.dispatcher import run_async
@@ -26,14 +26,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-"""
-Create database object
-Database schema:
-<chat_id>_adm -> user id of the user who invited the bot
-<chat_id>_spb -> user id of the user who is target of  mocking spongebob
-chats -> list of chat ids where the bot has received messages in.
-"""
 
 dal = DataAccessLayer()
 
@@ -56,11 +48,6 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /ertaoz - ინფორმაცია ერთაოზზე
 /shonzo_way - სად ვჭამო თბილისში
 /random - შემთხვევითი
-
--- admin --
-/unleash_spongebob - გააქტიურე სპანჩ ბობი {user_id}
-/restrain_spongebob - დააოკე სპანჩ ბობი
-
 """
 
 

@@ -9,4 +9,4 @@ fmt: # Run formatter
 lint: # Run linters
 	isort --check bots dal
 	black --check bots dal
-	flake8 bots,dal
+	flake8 bots dal

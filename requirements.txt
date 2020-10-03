@@ -1,7 +1,6 @@
 python-telegram-bot==12.8
 environs==8.0.0
 requests==2.24.0
-pytz==2019.3
 transliterate==1.10.2
 click==7.1.2
 validators==0.18.1

@@ -1,8 +1,6 @@
 # Ertaoz Bot
 ![Github actions](https://github.com/demonno/telegram_bots/workflows/bothealth/badge.svg)
 
-![Logo](art/logo.png)
-
 ## Install
 
 ### Setup python virtual env on Linux
@@ -53,9 +51,7 @@ Or explicitly
 
 Check out `--help` to run other bots
 
-    python main.py -h
-    python main.py --bot noshrevan_bot
-    python main.py --bot qristefore_bot
+    python main.py -h    
 
 
 ## Run black formatter
