@@ -1,6 +1,5 @@
 import requests
-
-from bots import env
+from src import settings
 
 
 def data_not_found():
@@ -11,7 +10,7 @@ class Corona:
     corona_api_id = None
 
     def __init__(self):
-        self.corona_api_id = env.str("CORONA_API_ID")
+        self.corona_api_id = settings.CORONA_API_ID
 
     def corona(self, city):
         resp = requests.get(

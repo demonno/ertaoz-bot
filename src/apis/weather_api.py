@@ -1,8 +1,7 @@
 import datetime
 
 import requests
-
-from bots import env
+from src import settings
 
 
 class DayWeather:
@@ -29,7 +28,7 @@ class Weather:
     }
 
     def __init__(self):
-        self.weather_api_id = env.str("WEATHER_API_ID")
+        self.weather_api_id = settings.WEATHER_API_ID
 
     def weather(self, city):
         resp = requests.get(

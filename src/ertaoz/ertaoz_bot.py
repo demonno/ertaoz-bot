@@ -5,21 +5,20 @@ import random
 
 import requests
 import validators
+from src.apis.corona_api import Corona
+from src.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
+from src.apis.minify_api import MinifyAPI, MinifyAPIException
+from src.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
+from src.apis.weather_api import Weather
+from src.dal import DataAccessLayer
+from src.utils.emoji import strip_emoji, strip_spaces
+from src.utils.typing import send_typing_action
 from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.ext.dispatcher import run_async
 from transliterate import detect_language, translit
 from transliterate.exceptions import LanguageDetectionError
-
-from bots.apis.corona_api import Corona
-from bots.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
-from bots.apis.minify_api import MinifyAPI, MinifyAPIException
-from bots.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
-from bots.apis.weather_api import Weather
-from bots.utils.emoji import strip_emoji, strip_spaces
-from bots.utils.typing import send_typing_action
-from dal import DataAccessLayer
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -29,7 +28,6 @@ logger = logging.getLogger(__name__)
 
 dal = DataAccessLayer()
 
-TOKEN = "726693597:AAGuNw5J2QiDc-C7DKr2Sa4gaQFJy51E4Bc"
 BOT_USERNAME = "ertaoz_bot"
 
 HELP_TEXT = """ერთაოზი ძუყნურიდან!
