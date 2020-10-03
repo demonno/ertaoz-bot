@@ -370,9 +370,9 @@ def run(token: str):
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
     dp.add_handler(CommandHandler("minify", minify))
     dp.add_handler(CommandHandler("random", random_handler))
+    dp.add_handler(CommandHandler("mock", mocking_spongebob))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
-    dp.add_handler(MessageHandler(Filters.text, mocking_spongebob))
 
     # Start the Bot
     updater.start_polling()
