@@ -5,6 +5,7 @@ import random
 
 import requests
 import validators
+from src import settings
 from src.apis.corona_api import Corona
 from src.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
 from src.apis.minify_api import MinifyAPI, MinifyAPIException
@@ -375,7 +376,16 @@ def run(token: str):
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
     # Start the Bot
-    updater.start_polling()
+    # updater.start_polling()
+    # Start the Bot
+    updater.start_webhook(
+        listen="0.0.0.0",
+        port=settings.BOT_ERTAOZ_WEBHOOK_PORT,
+        url_path=settings.BOT_ERTAOZ_TOKEN,
+    )
+    updater.bot.setWebhook(
+        "https://protected-anchorage-74285.herokuapp.com/" + settings.BOT_ERTAOZ_TOKEN
+    )
 
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or
     # SIGABRT. This should be used most of the time, since start_polling() is
