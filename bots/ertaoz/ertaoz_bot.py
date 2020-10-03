@@ -4,34 +4,26 @@ import logging
 import random
 
 import requests
-from telegram import ParseMode, Message, Chat
+import validators
+from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.ext.dispatcher import run_async
 from transliterate import detect_language, translit
 from transliterate.exceptions import LanguageDetectionError
 
+from bots.apis.corona_api import Corona
 from bots.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
+from bots.apis.minify_api import MinifyAPI, MinifyAPIException
 from bots.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
 from bots.apis.weather_api import Weather
-from bots.apis.corona_api import Corona
-from bots.apis.minify_api import MinifyAPI, MinifyAPIException
 from bots.utils.emoji import strip_emoji, strip_spaces
 from bots.utils.typing import send_typing_action
 from dal import DataAccessLayer
-import validators
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
-"""
-Create database object
-Database schema:
-<chat_id>_adm -> user id of the user who invited the bot
-<chat_id>_spb -> user id of the user who is target of  mocking spongebob
-chats -> list of chat ids where the bot has received messages in.
-"""
 
 dal = DataAccessLayer()
 
@@ -54,11 +46,6 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /ertaoz - ინფორმაცია ერთაოზზე
 /shonzo_way - სად ვჭამო თბილისში
 /random - შემთხვევითი
-
--- admin --
-/unleash_spongebob - გააქტიურე სპანჩ ბობი {user_id}
-/restrain_spongebob - დააოკე სპანჩ ბობი
-
 """
 
 
