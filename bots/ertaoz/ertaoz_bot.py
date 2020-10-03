@@ -98,7 +98,7 @@ def order(update, context):
 @send_typing_action
 def minify(update, context):
     link = context.args[0] if len(context.args) > 0 else None
-    if link == None or not validators.url(link):
+    if link is None or not validators.url(link):
         send_async(update, context, text="/minify {url} აუცილებელია გადმოსცეთ URL")
         return
 
@@ -234,7 +234,7 @@ def empty_message(update, context):
 def mocking_spongebob(update, context):
     message = update.message
     chat = message.chat
-    if chat and update.effective_user["is_bot"] == False:
+    if chat and update.effective_user["is_bot"] is False:
         imageflip = ImageflipAPI()
 
         first_name = update.effective_user["first_name"]
@@ -355,7 +355,6 @@ def run(token: str):
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
     updater = Updater(token, use_context=True)
-    job = updater.job_queue
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher

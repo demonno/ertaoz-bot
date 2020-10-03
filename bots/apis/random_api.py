@@ -58,27 +58,27 @@ class RandomAPI:
             random_resource = random.choice(["panda", "dog", "cat", "birb", "koala"])
             return self.fetch_img_resource(random_resource)
         elif resource in ["panda", "პანდა"]:
-            if params.get("fact") == True:
+            if params.get("fact") is True:
                 return self.fetch_fact_resource("panda")
             return self.fetch_img_resource("panda")
         elif resource in ["dog", "ძაღლი"]:
-            if params.get("fact") == True:
+            if params.get("fact") is True:
                 return self.fetch_fact_resource("dog")
             return self.fetch_img_resource("dog")
         elif resource in ["cat", "კატა", "ფისო", "კნუტი"]:
-            if params.get("fact") == True:
+            if params.get("fact") is True:
                 return self.fetch_fact_resource("cat")
             return self.fetch_img_resource("cat")
         elif resource in ["fox", "მელა", "მელაკუდა"]:
-            if params.get("fact") == True:
+            if params.get("fact") is True:
                 return self.fetch_fact_resource("fox")
             return self.fetch_img_resource("fox")
         elif resource in ["bird", "ჩიტი"]:
-            if params.get("fact") == True:
+            if params.get("fact") is True:
                 return self.fetch_fact_resource("bird")
             return self.fetch_img_resource("birb")
         elif resource in ["koala", "კოალა"]:
-            if params.get("fact") == True:
+            if params.get("fact") is True:
                 return self.fetch_fact_resource("koala")
             return self.fetch_img_resource("koala")
         elif resource in ["wink"]:
