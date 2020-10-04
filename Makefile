@@ -3,10 +3,10 @@ install:
 	pip install -r requirements.txt
 
 fmt: # Run formatter
-	isort bots dal
-	black bots dal
+	isort src
+	black src
 
 lint: # Run linters
-	isort --check bots dal
-	black --check bots dal
-	flake8 bots dal
+	isort --check src
+	black --check src
+	flake8 src

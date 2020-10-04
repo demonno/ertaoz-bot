@@ -1,6 +1,6 @@
 import random
 
-from dal.models import Wisdom
+from src.dal.models import Wisdom
 
 
 class WisdomDal:

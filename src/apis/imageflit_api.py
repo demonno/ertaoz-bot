@@ -1,6 +1,5 @@
 import requests
-
-from bots import env
+from src import settings
 
 
 class ImageFlipApiException(Exception):
@@ -14,8 +13,8 @@ class ImageflipAPI:
 
     def __init__(self) -> None:
         self.api_url = "https://api.imgflip.com"
-        self.username = env.str("IMGFLIP_API_USERNAME")
-        self.password = env.str("IMGFLIP_API_PASSWORD")
+        self.username = settings.IMGFLIP_API_USERNAME
+        self.password = settings.IMGFLIP_API_PASSWORD
         self.mocking_spongebob_meme_id = 102156234
 
     def mocking_spongebob_url(self, text_top, text_bottom) -> str:

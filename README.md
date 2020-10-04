@@ -14,7 +14,7 @@
 
 ### Install packages in `venv`
 
-    pip install -r requirements.txt
+    make install
 
 
 ## Create Test Bot using Botfather
@@ -23,47 +23,19 @@ For testing prurposes its recommended to have a separate testing bot.
 Read docs about how to create a bot [here](https://core.telegram.org/bots#3-how-do-i-create-a-bot).
 After you will get token which you can set in `.env` file
 
-## Enviroment Variables
 
-Tokens secrets and configurations stored in `.env` file, create locally. !do not commit in git!
-
-```ini
-ERTAOZ_TOKEN=
-
-WEATHER_API_ID=
-IMGFLIP_API_USERNAME=
-IMGFLIP_API_PASSWORD=
-
-ERROR_REPORTING=false
-ERROR_REPORTING_CHAT_ID=-00000000
-
-```
-
-## Run locally
-
-To run default bot:
+## Run bot
 
     python main.py
 
-Or explicitly
 
-    python main.py --bot ertaoz_bot
+## Run formatters
 
-Check out `--help` to run other bots
+    make fmt
 
-    python main.py -h    
+## Run linters
 
-
-## Run black formatter
-
-    black .
-
-### Vscode -
-
-Install extension: `ms-python.python`
-
-To Setup with VS Code: https://github.com/psf/black#visual-studio-code
-
+    make lint
 
 ## Contribution Guidelines
 
