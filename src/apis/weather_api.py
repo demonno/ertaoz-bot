@@ -13,7 +13,11 @@ class DayWeather:
 
 
 class Weather:
-    weather_api_id = None
+    """
+    Integration with weather API
+
+    https://openweathermap.org/api
+    """
 
     weather_emoji_dict = {
         "01": "☀",
@@ -29,10 +33,12 @@ class Weather:
 
     def __init__(self):
         self.weather_api_id = settings.WEATHER_API_ID
+        self.weather_api_url = "http://api.openweathermap.org/data/2.5/"
+        self.error_message = "ამინდის პროგნოზი ვერ მოიძებნა"
 
     def weather(self, city):
         resp = requests.get(
-            "http://api.openweathermap.org/data/2.5/weather",
+            self.weather_api_url + "weather",
             params={"q": city, "appid": self.weather_api_id, "units": "metric"},
         )
 
@@ -46,7 +52,9 @@ class Weather:
             ]
             weather_info = weather_data["weather"][0]["description"]
             wind = weather_data["wind"]["speed"]
-            wind_emoji = "🌪" if weather_data["wind"]["speed"] > 30 else "💨"
+            wind_emoji = "🌪" if weather_data["wind"]["speed"] > 20 else "💨"
+            visibility = weather_data["visibility"] / 1000
+            visibility_emoji = "👀"
             timezone = weather_data["timezone"]
             sunrise = datetime.datetime.utcfromtimestamp(
                 (weather_data["sys"]["sunrise"]) + timezone
@@ -62,19 +70,21 @@ class Weather:
             sunset_minute = sunset.minute
 
             result = (
-                f"{city} ტემპერატურა: {temp_emoji} {temp} ℃ \nრეალური შეგრძნება: {feels_like} C\n"
+                f"{city} ტემპერატურა: {temp_emoji} {temp} ℃ \nრეალური შეგრძნება: {feels_like} ℃\n"
                 f"ამინდი: {weather_emoji} {weather_info}\n"
-                f"ქარის სიჩქარე: {wind_emoji} {wind} კმ/ს\nმზის ამოსვლა: {sunrise_emoji} {sunrise_hour}:{sunrise_minute}\n"
+                f"ქარის სიჩქარე: {wind_emoji} {wind} მ/წ\n"
+                f"ხილვადობა: {visibility_emoji} {visibility} კმ\n"
+                f"მზის ამოსვლა: {sunrise_emoji} {sunrise_hour}:{sunrise_minute}\n"
                 f"მზის ჩასვლა: {sunset_emoji} {sunset_hour}:{sunset_minute}"
             )
 
             return result
         else:
-            return "ამინდის პროგნოზი ვერ მოიძებნა"
+            return self.error_message
 
     def weather_forecast(self, city):
         resp = requests.get(
-            "http://api.openweathermap.org/data/2.5/forecast",
+            self.weather_api_url + "forecast",
             params={"q": city, "appid": self.weather_api_id, "units": "metric"},
         )
 
@@ -83,7 +93,6 @@ class Weather:
 
             timezone_shift = weather_data["city"]["timezone"]
             temp_list = weather_data["list"]
-            result = ""
             weather_dict = {}
             for data in temp_list:
                 date = datetime.datetime.utcfromtimestamp((data["dt"]) + timezone_shift)
@@ -105,8 +114,9 @@ class Weather:
                 weather_dict[date.day].description = data["weather"][0]["description"]
                 weather_dict[date.day].date = str(date.day) + "-" + date.strftime("%B")
 
+            result = city + " 🌡\n"
             for weather in weather_dict:
                 result += f"{weather_dict[weather].date} {weather_dict[weather].max_temp}/{weather_dict[weather].min_temp}℃ {weather_dict[weather].emoji} {weather_dict[weather].description}\n"
             return result
         else:
-            return "ამინდის პროგნოზი ვერ მოიძებნა"
+            return self.error_message
