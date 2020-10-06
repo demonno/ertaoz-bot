@@ -385,7 +385,8 @@ def run(token: str):
             url_path=settings.BOT_ERTAOZ_TOKEN,
         )
         updater.bot.setWebhook(
-            "https://protected-anchorage-74285.herokuapp.com/" + settings.BOT_ERTAOZ_TOKEN
+            "https://protected-anchorage-74285.herokuapp.com/"
+            + settings.BOT_ERTAOZ_TOKEN
         )
 
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or
