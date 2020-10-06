@@ -376,16 +376,17 @@ def run(token: str):
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
     # Start the Bot
-    # updater.start_polling()
-    # Start the Bot
-    updater.start_webhook(
-        listen="0.0.0.0",
-        port=settings.BOT_ERTAOZ_WEBHOOK_PORT,
-        url_path=settings.BOT_ERTAOZ_TOKEN,
-    )
-    updater.bot.setWebhook(
-        "https://protected-anchorage-74285.herokuapp.com/" + settings.BOT_ERTAOZ_TOKEN
-    )
+    if settings.ENVIRONMENT == "local":
+        updater.start_polling()
+    else:
+        updater.start_webhook(
+            listen="0.0.0.0",
+            port=settings.BOT_ERTAOZ_WEBHOOK_PORT,
+            url_path=settings.BOT_ERTAOZ_TOKEN,
+        )
+        updater.bot.setWebhook(
+            "https://protected-anchorage-74285.herokuapp.com/" + settings.BOT_ERTAOZ_TOKEN
+        )
 
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or
     # SIGABRT. This should be used most of the time, since start_polling() is

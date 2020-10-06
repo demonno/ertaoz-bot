@@ -1,5 +1,5 @@
 # Ertaoz Bot
-![Github actions](https://github.com/demonno/telegram_bots/workflows/bothealth/badge.svg)
+![Github actions](https://github.com/demonno/ertaoz-bot/workflows/bothealth/badge.svg)
 
 ## Install
 
@@ -39,8 +39,8 @@ After you will get token which you can set in `.env` file
 
 ## Contribution Guidelines
 
-* Create New Issue: https://github.com/demonno/telegram_bots/issues/new
-* Link issue to https://github.com/demonno/telegram_bots/projects
+* Create New Issue: https://github.com/demonno/ertaoz-bot/issues/new
+* Link issue to https://github.com/demonno/ertaoz-bot/projects
 * Work on your branch, branch naming policy e{issue_number}
 * Create Pull Request and ask for reviews
 * Add `fixes #{issue_number}` in the body of pull request

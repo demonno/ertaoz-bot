@@ -3,6 +3,8 @@ from environs import Env
 env = Env()
 env.read_env()
 
+ENVIRONMENT = env.str("ENVIRONMENT")
+
 BOT_ERTAOZ_TOKEN = env.str("BOT_ERTAOZ_TOKEN")
 BOT_ERTAOZ_WEBHOOK_PORT = env.int("PORT")
 
