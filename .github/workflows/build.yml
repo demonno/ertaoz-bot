@@ -1,4 +1,4 @@
-name: bothealth
+name: build
 
 on: [push]
 
