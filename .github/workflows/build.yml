@@ -1,0 +1,38 @@
+name: build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    -   name: Cache pip
+        uses: actions/cache@v2
+        with:
+            # This path is specific to Ubuntu
+            path: ~/.cache/pip
+            # Look to see if there is a cache hit for the corresponding requirements file
+            key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+            restore-keys: |
+                ${{ runner.os }}-pip-
+                ${{ runner.os }}-
+    - name: Install dependencies
+      run: |
+        python -m pip install -U pip
+        pip install -r requirements.txt
+    - name: Lint with flake8
+      run: |
+        flake8 .
+    - name: Check code formating
+      run: |
+        black --check .
+    - name: Check import formatting
+      run: |
+        isort --check .

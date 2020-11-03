@@ -5,6 +5,13 @@ import random
 
 import requests
 import validators
+from telegram import ParseMode
+from telegram.error import BadRequest
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+from telegram.ext.dispatcher import run_async
+from transliterate import detect_language, translit
+from transliterate.exceptions import LanguageDetectionError
+
 from src import settings
 from src.apis.corona_api import Corona
 from src.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
@@ -14,12 +21,6 @@ from src.apis.weather_api import Weather
 from src.dal import DataAccessLayer
 from src.utils.emoji import strip_emoji, strip_spaces
 from src.utils.typing import send_typing_action
-from telegram import ParseMode
-from telegram.error import BadRequest
-from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
-from telegram.ext.dispatcher import run_async
-from transliterate import detect_language, translit
-from transliterate.exceptions import LanguageDetectionError
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
