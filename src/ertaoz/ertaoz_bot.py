@@ -355,7 +355,7 @@ def corona(update, context):
 
 
 def gel_handler(update, context):
-    send_async_gif(update, context, text=GEL_TEXT)
+    send_async(update, context, text=GEL_TEXT)
 
 
 def run(token: str):
