@@ -48,6 +48,11 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /ertaoz - ინფორმაცია ერთაოზზე
 /shonzo_way - სად ვჭამო თბილისში
 /random - შემთხვევითი
+/gel - ლარი რას შვება
+"""
+
+GEL_TEXT = """
+ასეთი მასა, დოლარისა, ინვესტიციისა საქართველოში, რომელიც, რომლის შემოსვლაც დაიწყება მომავალი წლიდან, რათქმაუნდა ეს დაიწყებს, იმოქმედებს ჩვენი ლარის კურსის ძალიან, ასე ვთქვათ, სწრაფლ გამყარების მიმართულებით და მე მაინტერესებს, ესეიგი არის თუ არა  განსაზღვრული მთავრობაში ის მიჯნა, რომლის ქვევით ესეიგი ასევთქვათ ის კრიტერიუმი ან საზღვარი რომლის ქვევით აღარ გამყარდება ლარი და  ასევთქვათ ჩაერევა ეროვნული ბანკი, ასევთქვათ აი ამ პროცესებში.
 """
 
 
@@ -349,6 +354,10 @@ def corona(update, context):
     send_async(update, context, text=corona_info)
 
 
+def gel_handler(update, context):
+    send_async(update, context, text=GEL_TEXT)
+
+
 def run(token: str):
     """Run bot."""
     # Create the Updater and pass it your bot's token.
@@ -373,6 +382,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("minify", minify))
     dp.add_handler(CommandHandler("random", random_handler))
     dp.add_handler(CommandHandler("mock", mocking_spongebob))
+    dp.add_handler(CommandHandler("gel", gel_handler))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
