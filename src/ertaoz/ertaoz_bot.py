@@ -179,12 +179,7 @@ def welcome(update, context, new_chat_member):
         )
     )
 
-    text = """გამარჯობა {username}! კეთილი იყოს შენი მობრძანება {title}-ში :)
-
-    {username} დაწერე რა დღეებში ხარ საქართველოში.
-
-    გისურვებ ბედნიერ ახალი წლის დღეებს :) <3
-    """
+    text = "გამარჯობა {username}! კეთილი იყოს შენი მობრძანება {title}-ში :)"
 
     # Replace placeholders and send message
     text = text.format(username=new_chat_member["first_name"], title=message.chat.title)
