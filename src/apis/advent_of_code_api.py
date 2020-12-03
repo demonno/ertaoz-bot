@@ -1,5 +1,6 @@
 import requests
 
+from src import settings
 from src.dal.advent_of_code_user import AdventUser
 
 
@@ -8,12 +9,16 @@ def data_not_found():
 
 
 class AdventOfCode:
+
+    advent_of_code_session_id = None
+
+    def __init__(self):
+        self.advent_of_code_session_id = settings.ADVENT_OF_CODE_SESSION_ID
+
     def leaderboard(self):
         resp = requests.get(
             "https://adventofcode.com/2020/leaderboard/private/view/806524.json",
-            headers={
-                "cookie": "session=53616c7465645f5f5ca7760da729cd1d9320586020588532702cd89c78d1f2a3ae548bd97496fbd39da874d970abf9fd"
-            },
+            headers={"cookie": f"session={self.advent_of_code_session_id}"},
         )
 
         if resp.status_code == 200:
