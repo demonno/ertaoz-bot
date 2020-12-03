@@ -13,6 +13,7 @@ from transliterate import detect_language, translit
 from transliterate.exceptions import LanguageDetectionError
 
 from src import settings
+from src.apis.advent_of_code_api import AdventOfCode
 from src.apis.corona_api import Corona
 from src.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
 from src.apis.minify_api import MinifyAPI, MinifyAPIException
@@ -49,6 +50,7 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /shonzo_way - სად ვჭამო თბილისში
 /random - შემთხვევითი
 /gel - ლარი რას შვება
+/adventofcode - Advent of code
 """
 
 GEL_TEXT = """
@@ -349,6 +351,13 @@ def corona(update, context):
     send_async(update, context, text=corona_info)
 
 
+def adventOfCode(update, context):
+    api = AdventOfCode()
+    leaderboard_info = api.leaderboard()
+
+    send_async(update, context, text=leaderboard_info)
+
+
 def gel_handler(update, context):
     send_async(update, context, text=GEL_TEXT)
 
@@ -378,6 +387,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("random", random_handler))
     dp.add_handler(CommandHandler("mock", mocking_spongebob))
     dp.add_handler(CommandHandler("gel", gel_handler))
+    dp.add_handler(CommandHandler("adventofcode", adventOfCode))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
