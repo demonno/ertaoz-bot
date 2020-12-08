@@ -10,4 +10,4 @@ class AdventUser:
     @property
     def formatted(self) -> str:
         star_message = "*" * self.stars
-        return f"{self.name}: {self.local_score}  {star_message}"
+        return f"{star_message:<30} - {self.name:<22} {self.local_score:<3}"
