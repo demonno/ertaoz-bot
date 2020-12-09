@@ -351,7 +351,7 @@ def corona(update, context):
     send_async(update, context, text=corona_info)
 
 
-def adventOfCode(update, context):
+def advent_of_code(update, context):
     api = AdventOfCode()
     leaderboard_info = api.leaderboard()
 
@@ -387,7 +387,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("random", random_handler))
     dp.add_handler(CommandHandler("mock", mocking_spongebob))
     dp.add_handler(CommandHandler("gel", gel_handler))
-    dp.add_handler(CommandHandler("adventofcode", adventOfCode))
+    dp.add_handler(CommandHandler("adventofcode", advent_of_code))
 
     dp.add_handler(MessageHandler(Filters.status_update, empty_message))
 
