@@ -1,4 +1,5 @@
 import requests
+import csv
 
 from src import settings
 
@@ -52,5 +53,41 @@ class Corona:
                         )
                         return result
             return data_not_found()
+        else:
+            return data_not_found()
+
+    def vaccination(self, city):
+        resp = requests.get(
+            "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
+        )
+
+        if resp.status_code == 200:
+            decoded_content = resp.content.decode('utf-8')
+
+            cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+            data_list = list(cr)
+            country_row = []
+            for row in data_list:
+                country_name = row[2]
+                if country_name.lower() == city.lower():
+                    country_row = row
+
+            print(country_row)
+            if country_row:
+                population = "{:.2f}".format((float(country_row[44]) / 1000000))
+                people_vaccinated = country_row[34]
+                people_vaccinated_per_100 = country_row[39]
+                people_fully_vaccinated_per_100 = country_row[40]
+                gdp = country_row[49]
+                result = (
+                    f"{city} სულ მოსახლეობა: 🧍 {population} მილიონი\n"
+                    f"აცრილი მოსახლეობა: 💉 {people_vaccinated}\n"
+                    f"აცრილი ყოველ 100 კაცზე: {people_vaccinated_per_100}\n"
+                    f"ორივე აცრა ყოველ 100 კაცზე: {people_fully_vaccinated_per_100}\n"
+                    f"მთლიანი შიდა პროდუქტი {gdp} 💲\n"
+                )
+                return result
+            else:
+                return data_not_found()
         else:
             return data_not_found()
