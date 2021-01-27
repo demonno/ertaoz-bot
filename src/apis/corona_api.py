@@ -1,5 +1,5 @@
-import requests
 import csv
+import requests
 
 from src import settings
 
