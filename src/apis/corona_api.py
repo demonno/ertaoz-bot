@@ -62,9 +62,9 @@ class Corona:
         )
 
         if resp.status_code == 200:
-            decoded_content = resp.content.decode('utf-8')
+            decoded_content = resp.content.decode("utf-8")
 
-            cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+            cr = csv.reader(decoded_content.splitlines(), delimiter=",")
             data_list = list(cr)
             country_row = []
             for row in data_list:
