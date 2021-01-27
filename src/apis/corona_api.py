@@ -70,7 +70,11 @@ class Corona:
             country_row = []
             for row in data_list:
                 country_name = row[2]
-                if country_name.lower() == city.lower():
+                country_code = row[0]
+                if (
+                    country_name.lower() == city.lower()
+                    or country_code.lower() == city.lower()
+                ):
                     country_row = row
 
             print(country_row)
