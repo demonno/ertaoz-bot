@@ -359,7 +359,7 @@ def vaccination(update, context):
     else:
         corona_info = api.vaccination("Estonia")
 
-    send_async(update, context, text=corona_info)
+    send_async(update, context, text=corona_info, parse_mode=ParseMode.HTML)
 
 
 def advent_of_code(update, context):

@@ -80,16 +80,18 @@ class Corona:
             print(country_row)
             if country_row:
                 population = "{:.2f}".format((float(country_row[44]) / 1000000))
-                people_vaccinated = country_row[34]
+                people_vaccinated = format(int(float(country_row[34])), ",").replace(
+                    ",", " "
+                )
                 people_vaccinated_per_100 = country_row[39]
                 people_fully_vaccinated_per_100 = country_row[40]
-                gdp = country_row[49]
+                gdp = format(int(float(country_row[49])), ",").replace(",", " ")
                 result = (
-                    f"{city} სულ მოსახლეობა: 🧍 {population} მილიონი\n"
-                    f"აცრილი მოსახლეობა: 💉 {people_vaccinated}\n"
-                    f"აცრილი ყოველ 100 კაცზე: {people_vaccinated_per_100}\n"
-                    f"ორივე აცრა ყოველ 100 კაცზე: {people_fully_vaccinated_per_100}\n"
-                    f"მთლიანი შიდა პროდუქტი {gdp} 💲\n"
+                    f"<b>{city}</b> სულ მოსახლეობა: 🧍 <b>{population} მილიონი</b>\n"
+                    f"აცრილი მოსახლეობა: 💉 <b>{people_vaccinated if people_vaccinated else 0}</b>\n"
+                    f"აცრილი: <b>{people_vaccinated_per_100 if people_vaccinated_per_100 else 0} %</b>\n"
+                    f"ორივე აცრა: <b>{people_fully_vaccinated_per_100 if people_fully_vaccinated_per_100 else 0} %</b>\n"
+                    f"მთლიანი შიდა პროდუქტი <b>{gdp} 💲</b>\n"
                 )
                 return result
             else:
