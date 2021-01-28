@@ -45,6 +45,7 @@ HELP_TEXT = """ერთაოზი ძუყნურიდან!
 /weather - მიმდინარე ამინდი
 /weather_forecast - ამინდის პროგნოზი
 /corona - ინფორმაცია COVID-19 ზე
+/vaccination - ინფორმაცია COVID-19 ის ვაქცინაციაზე
 /wisdom - შერეკილების სიბრძნე
 /ertaoz - ინფორმაცია ერთაოზზე
 /shonzo_way - სად ვჭამო თბილისში
@@ -351,6 +352,16 @@ def corona(update, context):
     send_async(update, context, text=corona_info)
 
 
+def vaccination(update, context):
+    api = Corona()
+    if context.args:
+        corona_info = api.vaccination(context.args[0])
+    else:
+        corona_info = api.vaccination("Estonia")
+
+    send_async(update, context, text=corona_info, parse_mode=ParseMode.HTML)
+
+
 def advent_of_code(update, context):
     api = AdventOfCode()
     leaderboard_info = api.leaderboard()
@@ -381,6 +392,7 @@ def run(token: str):
     dp.add_handler(CommandHandler("weather", weather))
     dp.add_handler(CommandHandler("weather_forecast", weather_forecast))
     dp.add_handler(CommandHandler("corona", corona))
+    dp.add_handler(CommandHandler("vaccination", vaccination))
     dp.add_handler(CommandHandler("ertaoz", who_is_ertaoz))
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
     dp.add_handler(CommandHandler("minify", minify))
