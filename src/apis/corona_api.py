@@ -64,7 +64,7 @@ class Corona:
     def vaccination(self, city):
         resp = requests.get(
             "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv",
-            headers={"If-None-Match": self.vaccination_data_etag,},
+            headers={"If-None-Match": self.vaccination_data_etag},
         )
 
         if resp.status_code == 200:
