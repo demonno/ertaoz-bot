@@ -91,7 +91,6 @@ class Corona:
             ):
                 country_row = row
 
-        print(country_row)
         if country_row:
             country_iso = pycountry.countries.search_fuzzy(country_row[2])[0].alpha_2
             vaccinated_int = int(float(country_row[34])) if country_row[34] else 0
