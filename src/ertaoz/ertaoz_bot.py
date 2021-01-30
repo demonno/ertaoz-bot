@@ -58,6 +58,8 @@ GEL_TEXT = """
 ასეთი მასა, დოლარისა, ინვესტიციისა საქართველოში, რომელიც, რომლის შემოსვლაც დაიწყება მომავალი წლიდან, რათქმაუნდა ეს დაიწყებს, იმოქმედებს ჩვენი ლარის კურსის ძალიან, ასე ვთქვათ, სწრაფლ გამყარების მიმართულებით და მე მაინტერესებს, ესეიგი არის თუ არა  განსაზღვრული მთავრობაში ის მიჯნა, რომლის ქვევით ესეიგი ასევთქვათ ის კრიტერიუმი ან საზღვარი რომლის ქვევით აღარ გამყარდება ლარი და  ასევთქვათ ჩაერევა ეროვნული ბანკი, ასევთქვათ აი ამ პროცესებში.
 """
 
+corona_api = Corona()
+
 
 @run_async
 def send_async(update, context, *args, **kwargs):
@@ -343,21 +345,20 @@ def weather_forecast(update, context):
 
 
 def corona(update, context):
-    api = Corona()
     if context.args:
-        corona_info = api.corona(context.args[0])
+        corona_info = corona_api.corona(context.args[0])
     else:
-        corona_info = api.corona("Estonia")
+        corona_info = corona_api.corona("Estonia")
 
     send_async(update, context, text=corona_info)
 
 
 def vaccination(update, context):
-    api = Corona()
+
     if context.args:
-        corona_info = api.vaccination(context.args[0])
+        corona_info = corona_api.vaccination(context.args[0])
     else:
-        corona_info = api.vaccination("Estonia")
+        corona_info = corona_api.vaccination("Estonia")
 
     send_async(update, context, text=corona_info, parse_mode=ParseMode.HTML)
 
