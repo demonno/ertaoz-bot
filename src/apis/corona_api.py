@@ -82,7 +82,7 @@ class Corona:
     def parse_vaccination_data(self, city):
         data_list = self.vaccination_data_list
         country_row = []
-        for row in data_list:
+        for row in data_list[:-1]:
             country_name = row[2]
             country_code = row[0]
             if (
@@ -96,8 +96,8 @@ class Corona:
             vaccinated_int = int(float(country_row[34])) if country_row[34] else 0
             population = "{:.2f}".format((float(country_row[44]) / 1000000))
             people_vaccinated = format((vaccinated_int), ",").replace(",", " ")
-            people_vaccinated_per_100 = country_row[39]
-            people_fully_vaccinated_per_100 = country_row[40]
+            people_vaccinated_per_100 = country_row[40]
+            people_fully_vaccinated_per_100 = country_row[41]
             gdp = format(int(float(country_row[49])), ",").replace(",", " ")
             result = flag.flagize(
                 (
