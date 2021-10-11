@@ -93,19 +93,17 @@ class Corona:
 
         if country_row:
             country_iso = pycountry.countries.search_fuzzy(country_row[2])[0].alpha_2
-            vaccinated_int = int(float(country_row[34])) if country_row[34] else 0
-            population = "{:.2f}".format((float(country_row[44]) / 1000000))
+            vaccinated_int = int(float(country_row[35])) if country_row[35] else 0
+            population = "{:.2f}".format((float(country_row[46]) / 1000000))
             people_vaccinated = format((vaccinated_int), ",").replace(",", " ")
-            people_vaccinated_per_100 = country_row[40]
-            people_fully_vaccinated_per_100 = country_row[41]
-            gdp = format(int(float(country_row[49])), ",").replace(",", " ")
+            people_vaccinated_per_100 = country_row[41]
+            people_fully_vaccinated_per_100 = country_row[42]
             result = flag.flagize(
                 (
                     f"<b>{city}</b> :{country_iso}:  სულ მოსახლეობა: 🧍 <b>{population} მილიონი</b>\n"
                     f"აცრილი მოსახლეობა: 💉 <b>{people_vaccinated if people_vaccinated else 0}</b>\n"
                     f"აცრილი: 📈 <b>{people_vaccinated_per_100 if people_vaccinated_per_100 else 0} %</b>\n"
                     f"ორივე აცრა: 📊 <b>{people_fully_vaccinated_per_100 if people_fully_vaccinated_per_100 else 0} %</b>\n"
-                    f"მშპ ერთ სულ მოსახლეზე (PPP) <b>{gdp} 💲</b>\n"
                 )
             )
             return result
