@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
-import random
 
 import requests
 import validators
@@ -9,18 +8,14 @@ from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 from telegram.ext.dispatcher import run_async
-from transliterate import detect_language, translit
-from transliterate.exceptions import LanguageDetectionError
 
 from src import settings
 from src.apis.advent_of_code_api import AdventOfCode
 from src.apis.corona_api import Corona
-from src.apis.imageflit_api import ImageflipAPI, ImageFlipApiException
 from src.apis.minify_api import MinifyAPI, MinifyAPIException
 from src.apis.random_api import RandomAPI, RandomNotImplemented, ResourceType
 from src.apis.weather_api import Weather
 from src.dal import DataAccessLayer
-from src.utils.emoji import strip_emoji, strip_spaces
 from src.utils.typing import send_typing_action
 
 logging.basicConfig(
@@ -236,48 +231,6 @@ def empty_message(update, context):
             return goodbye(update, context)
 
 
-def mocking_spongebob(update, context):
-    message = update.message
-    chat = message.chat
-    if chat and update.effective_user["is_bot"] is False:
-        imageflip = ImageflipAPI()
-
-        first_name = update.effective_user["first_name"]
-        user_message = update.message["text"]
-
-        # skip short messages
-        if (
-            user_message is None
-            or len(user_message) < 5
-            or len(user_message) > 150
-            or "http" in user_message
-        ):
-            return
-        # Strip emoji
-        user_message = strip_emoji(user_message)
-        user_message = strip_spaces(user_message)
-        lang = "en"
-
-        # Transliteration
-        try:
-            lang = detect_language(user_message)
-        except LanguageDetectionError:
-            logger.error(f"Failed to detect language {user_message}")
-        if lang and lang != "en":
-            user_message = translit(user_message, lang, reversed=True)
-
-        # Meme text setup
-        top = f"{first_name}: {user_message}"
-        mocked_line = "".join(random.choice([k.upper(), k]) for k in user_message)
-        bottom = f"ME: {mocked_line}"
-        try:
-            url = imageflip.mocking_spongebob_url(top, bottom)
-        except ImageFlipApiException:
-            logger.error(f"Failed to generate meme {top}, {bottom}")
-        else:
-            context.bot.sendPhoto(chat_id=update.effective_chat.id, photo=url)
-
-
 @send_typing_action
 def help(update, context):
     command = context.args[0] if len(context.args) > 0 else None
@@ -398,7 +351,6 @@ def run(token: str):
     dp.add_handler(CommandHandler("shonzo_way", shonzo_way))
     dp.add_handler(CommandHandler("minify", minify))
     dp.add_handler(CommandHandler("random", random_handler))
-    dp.add_handler(CommandHandler("mock", mocking_spongebob))
     dp.add_handler(CommandHandler("gel", gel_handler))
     dp.add_handler(CommandHandler("adventofcode", advent_of_code))
 
